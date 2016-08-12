@@ -18,15 +18,7 @@
 {
     [super viewDidLoad];
     
-    
-    UIView* stopView= [self.view viewWithTag:201];
-    [self performSelector:@selector(addView:) withObject:stopView afterDelay:0.0];
-    
-    UIView* pauseView= [self.view viewWithTag:202];
-    [self performSelector:@selector(addView:) withObject:pauseView afterDelay:0.0];
-    
-    UIView* startRecordingView= [self.view viewWithTag:203];
-    [self performSelector:@selector(addView:) withObject:startRecordingView afterDelay:0.0];
+   
 
     // Do any additional setup after loading the view.
 }
@@ -34,6 +26,17 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     i=0;
+    
+    
+    
+    UIView* stopView= [self.view viewWithTag:201];
+    [self performSelector:@selector(addView:) withObject:stopView afterDelay:0.0];
+    
+    UIView* pauseView= [self.view viewWithTag:202];
+    [self performSelector:@selector(addView:) withObject:pauseView afterDelay:0.0];
+    
+    UIView* startRecordingView1= [self.view viewWithTag:203];
+    [self performSelector:@selector(addView:) withObject:startRecordingView1 afterDelay:0.0];
     
     UIView* startRecordingView= [self.view viewWithTag:303];
     UIImageView* counterLabel= [startRecordingView viewWithTag:503];
@@ -59,6 +62,10 @@
 -(void)setRoundedView:(UIView *)roundedView toDiameter:(float)newSize;
 {
     UIView* circleView=[[UIView alloc]init];
+    NSLog(@"%f",self.view.frame.size.width);
+    NSLog(@"%f",roundedView.frame.origin.x);;
+
+    NSLog(@"%f",roundedView.center.x);
     CGRect newFrame = CGRectMake(roundedView.frame.origin.x, roundedView.frame.origin.y, newSize, newSize);
     circleView.frame = newFrame;
     circleView.layer.cornerRadius = newSize / 2.0;

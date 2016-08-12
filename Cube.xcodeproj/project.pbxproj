@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8429BDD61D5DD839004CED76 /* RegistrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8429BDD51D5DD839004CED76 /* RegistrationViewController.m */; };
 		842D535C1D55EA0300ECCDE7 /* PopUpCustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 842D535B1D55EA0300ECCDE7 /* PopUpCustomView.m */; };
+		84302E9C1D5E094C005E14E2 /* RecordTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84302E9B1D5E094C005E14E2 /* RecordTabViewController.m */; };
 		8430D3DD1D4A1A7D005FCA33 /* TransferListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8430D3DC1D4A1A7D005FCA33 /* TransferListViewController.m */; };
 		8430D3E01D4A32AB005FCA33 /* AudioDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8430D3DF1D4A32AB005FCA33 /* AudioDetailsViewController.m */; };
 		843600F81D5C7198002A9395 /* ChangePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 843600F71D5C7198002A9395 /* ChangePasswordViewController.m */; };
@@ -49,8 +51,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8429BDD41D5DD839004CED76 /* RegistrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationViewController.h; sourceTree = "<group>"; };
+		8429BDD51D5DD839004CED76 /* RegistrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationViewController.m; sourceTree = "<group>"; };
 		842D535A1D55EA0300ECCDE7 /* PopUpCustomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopUpCustomView.h; sourceTree = "<group>"; };
 		842D535B1D55EA0300ECCDE7 /* PopUpCustomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopUpCustomView.m; sourceTree = "<group>"; };
+		84302E9A1D5E094C005E14E2 /* RecordTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordTabViewController.h; sourceTree = "<group>"; };
+		84302E9B1D5E094C005E14E2 /* RecordTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordTabViewController.m; sourceTree = "<group>"; };
 		8430D3DB1D4A1A7D005FCA33 /* TransferListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransferListViewController.h; sourceTree = "<group>"; };
 		8430D3DC1D4A1A7D005FCA33 /* TransferListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransferListViewController.m; sourceTree = "<group>"; };
 		8430D3DE1D4A32AB005FCA33 /* AudioDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioDetailsViewController.h; sourceTree = "<group>"; };
@@ -203,6 +209,8 @@
 				8430D3DF1D4A32AB005FCA33 /* AudioDetailsViewController.m */,
 				84FCCFA61D48CEB600E3D7AE /* RecordViewController.h */,
 				84FCCFA71D48CEB600E3D7AE /* RecordViewController.m */,
+				84302E9A1D5E094C005E14E2 /* RecordTabViewController.h */,
+				84302E9B1D5E094C005E14E2 /* RecordTabViewController.m */,
 				84FCCFA91D48CEC400E3D7AE /* ListViewController.h */,
 				84FCCFAA1D48CEC400E3D7AE /* ListViewController.m */,
 				84FCCFAC1D48CED300E3D7AE /* AlertViewController.h */,
@@ -217,6 +225,8 @@
 				843600F71D5C7198002A9395 /* ChangePasswordViewController.m */,
 				842D535A1D55EA0300ECCDE7 /* PopUpCustomView.h */,
 				842D535B1D55EA0300ECCDE7 /* PopUpCustomView.m */,
+				8429BDD41D5DD839004CED76 /* RegistrationViewController.h */,
+				8429BDD51D5DD839004CED76 /* RegistrationViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -397,6 +407,8 @@
 				844C4A731D4B393800CF3DB4 /* UserSettingsViewController.m in Sources */,
 				84FCCFAB1D48CEC400E3D7AE /* ListViewController.m in Sources */,
 				847222461D47368A00C00F20 /* AppDelegate.m in Sources */,
+				84302E9C1D5E094C005E14E2 /* RecordTabViewController.m in Sources */,
+				8429BDD61D5DD839004CED76 /* RegistrationViewController.m in Sources */,
 				84FCCFA81D48CEB600E3D7AE /* RecordViewController.m in Sources */,
 				84FCCFA51D48CE3700E3D7AE /* HomeViewController.m in Sources */,
 				84FCCFB11D48D01000E3D7AE /* MainTabBarViewController.m in Sources */,

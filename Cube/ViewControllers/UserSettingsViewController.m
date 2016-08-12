@@ -83,7 +83,7 @@
     //for upper undeline view of section
     if (section!=0)
     {
-        UIView* lineView=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, tableView.frame.origin.y, tableView.frame.size.width, 1)];
+        UIView* lineView=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, 0, tableView.frame.size.width, 1)];
         lineView.backgroundColor=[UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1];
         [sectionHeaderView addSubview:lineView];
     }
@@ -152,13 +152,30 @@
 {
     if ([tableView isEqual:poUpTableView])
     {
-        return 45;
+        if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedRowAndSection"] isEqualToString:@"10"])
+        {
+            return 40;
+        }
+        else
+        return 50;
     }
     else
     return 60;
     
 
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([tableView isEqual:poUpTableView])
+    {
+        return 40;
+    }
+    else
+        return 50;
+    
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 
@@ -265,7 +282,7 @@
 
             if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"dictationTime"] isEqualToString:selectOptionLabel.text])
             {
-                UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 18, 19)];
+                UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 19, 19)];
                 [button setBackgroundImage:[UIImage imageNamed:@"RadioButton"] forState:UIControlStateNormal];
                 [radioButtonArray replaceObjectAtIndex:indexPath.row withObject:button];
             }
@@ -280,7 +297,7 @@
         {
             if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"lowStorageThreshold"] isEqualToString:selectOptionLabel.text])
             {
-                UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 18, 19)];
+                UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 19, 19)];
                 [button setBackgroundImage:[UIImage imageNamed:@"RadioButton"] forState:UIControlStateNormal];
                 [radioButtonArray replaceObjectAtIndex:indexPath.row withObject:button];
             }
@@ -294,7 +311,7 @@
         {
             if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"numberOfDaysForDeletedData"] isEqualToString:selectOptionLabel.text])
             {
-                UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 18, 19)];
+                UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 19, 19)];
                 [button setBackgroundImage:[UIImage imageNamed:@"RadioButton"] forState:UIControlStateNormal];
                 [radioButtonArray replaceObjectAtIndex:indexPath.row withObject:button];
             }
@@ -394,7 +411,7 @@
         }
         if (indexPath.section==2 && indexPath.row==0)
         {
-            [self.navigationController presentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"ChangePasswordViewController"] animated:YES completion:nil];
+            [self presentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"ChangePasswordViewController"] animated:YES completion:nil];
         }
     }
     
@@ -543,4 +560,8 @@
 }
 */
 
+- (IBAction)backButtonPressed:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

@@ -89,12 +89,17 @@
 -(void)UserSetting
 {
     [[[[UIApplication sharedApplication] keyWindow] viewWithTag:111] removeFromSuperview];
-    [self.navigationController presentViewController:[self.storyboard  instantiateViewControllerWithIdentifier:@"UserSettingsNavigationController"] animated:YES completion:nil];
+    [self.navigationController presentViewController:[self.storyboard  instantiateViewControllerWithIdentifier:@"UserSettingsViewController"] animated:YES completion:nil];
 }
+
+
 
 -(void)Logout
 {
- 
+    [[[[UIApplication sharedApplication] keyWindow] viewWithTag:111] removeFromSuperview];
+
+    [self.navigationController presentViewController:[self.storyboard  instantiateViewControllerWithIdentifier:@"RegistrationViewController"] animated:YES completion:nil];
+
 }
 -(void)dismissPopView:(id)sender
 {

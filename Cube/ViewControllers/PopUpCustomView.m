@@ -35,11 +35,11 @@
     {
         // Initialization code
         // initilize all your UIView components
-        UIButton* userSettingsButton;
+        UIButton* userSettingsButton=[[UIButton alloc]initWithFrame:CGRectMake(10, 0, 0, 0)];
         for (int i=0; i<subViewNamesArray.count; i++)
         {
         
-        userSettingsButton=[[UIButton alloc]initWithFrame:CGRectMake(20, userSettingsButton.frame.origin.x+userSettingsButton.frame.size.height+10, 100, 10)];
+        userSettingsButton=[[UIButton alloc]initWithFrame:CGRectMake(20, userSettingsButton.frame.origin.x+userSettingsButton.frame.size.height, 100, 20)];
         [userSettingsButton setTitle:[subViewNamesArray objectAtIndex:i] forState:UIControlStateNormal];
         [userSettingsButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         userSettingsButton.titleLabel.font=[UIFont systemFontOfSize:14];
@@ -47,6 +47,7 @@
            selector = [selector stringByReplacingOccurrencesOfString:@" " withString:@""];
         [userSettingsButton addTarget:sender action:NSSelectorFromString(selector) forControlEvents:UIControlEventTouchUpInside];
         
+        //    [userSettingsButton setBackgroundColor:[UIColor colorWithRed:(i*155)/255.0 green:(i*155)/255.0 blue:(i*155)/255.0 alpha:1]];
         [self addSubview:userSettingsButton];
 //            selectSetting
         }
