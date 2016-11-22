@@ -8,6 +8,25 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TransferListViewController : UIViewController
+@interface TransferListViewController : UIViewController<UIGestureRecognizerDelegate>
+{
+
+    UIAlertController *alertController;
+    UIAlertAction *actionDelete;
+    UIAlertAction *actionCancel;
+    BOOL deleted;
+    NSDictionary* audiorecordDict;
+    NSMutableArray* cellSelected;
+    BOOL isMultipleFilesActivated;
+    BOOL toolBarAdded;
+    NSMutableArray* arrayOfMarked;
+    UILabel* selectedCountLabel;
+}
 @property(nonatomic,strong)NSString* currentViewName;
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (strong, nonatomic) NSMutableArray* checkedIndexPath;
+
+@property(nonatomic)BOOL longPressAdded;
 @end

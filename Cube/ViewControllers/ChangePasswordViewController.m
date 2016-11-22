@@ -7,13 +7,14 @@
 //
 
 #import "ChangePasswordViewController.h"
-
+#import "MBProgressHUD.h"
+#import "LoginViewController.h"
 @interface ChangePasswordViewController ()
 
 @end
 
 @implementation ChangePasswordViewController
-@synthesize pinCode1TextField,pinCode2TextField,pinCode3TextField,pinCode4TextField,navigationBarView,pinCode5TextField,pinCode6TextField,pinCode7TextField,pinCode8TextField,submitButton;
+@synthesize pinCode1TextField,pinCode2TextField,pinCode3TextField,pinCode4TextField,navigationBarView,pinCode5TextField,pinCode6TextField,pinCode7TextField,pinCode8TextField,submitButton,cancelButton,window,hud;
 
 - (void)viewDidLoad
 {
@@ -83,6 +84,12 @@
     pinCode8TextField.layer.borderWidth= 1.0f;
     
     submitButton.layer.cornerRadius=4.0f;
+    cancelButton.layer.cornerRadius=4.0f;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pinChangeResponseCheck:) name:NOTIFICATION_PIN_CANGE_API
+                                               object:nil];
+
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -143,6 +150,15 @@
     }
 
 }
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField==pinCode8TextField)
+    {
+        [textField resignFirstResponder];
+    }
+    return YES;
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -163,4 +179,200 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+- (IBAction)submitButtonClicked:(id)sender
+{
+    NSString* title;
+    NSString* message;
+    UIAlertAction *actionOk;
+    NSString* oldPin=[NSString stringWithFormat:@"%@%@%@%@",pinCode1TextField.text,pinCode2TextField.text,pinCode3TextField.text,pinCode4TextField.text];
+      NSString* newPin=[NSString stringWithFormat:@"%@%@%@%@",pinCode5TextField.text,pinCode6TextField.text,pinCode7TextField.text,pinCode8TextField.text];
+    if ([pinCode1TextField.text isEqual:@""] || [pinCode2TextField.text isEqual:@""]|| [pinCode3TextField.text isEqual:@""] || [pinCode4TextField.text isEqual:@""] || [pinCode5TextField.text isEqual:@""] || [pinCode6TextField.text isEqual:@""]|| [pinCode7TextField.text isEqual:@""] || [pinCode8TextField.text isEqual:@""])
+    {
+        title=@"Incomplete pin code";
+        message=@"Please enter pin code properly";
+        alertController = [UIAlertController alertControllerWithTitle:title
+                                                              message:message
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+        actionOk = [UIAlertAction actionWithTitle:@"Ok"
+                                            style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction * action)
+                    {
+                        pinCode1TextField.text=@"";pinCode2TextField.text=@"";pinCode3TextField.text=@"";pinCode4TextField.text=@"";
+                        pinCode5TextField.text=@"";pinCode6TextField.text=@"";pinCode7TextField.text=@"";pinCode8TextField.text=@"";
+                        [pinCode1TextField becomeFirstResponder];
+                    }]; //You can use a block here to handle a press on this button
+        [alertController addAction:actionOk];
+        [self presentViewController:alertController animated:YES completion:nil];
+
+    }
+    else
+    if ([oldPin isEqualToString:newPin])
+    {
+        title=@"Old and new pin code are same";
+        message=@"Please enter new pin code ";
+        alertController = [UIAlertController alertControllerWithTitle:title
+                                                                                 message:message
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        actionOk = [UIAlertAction actionWithTitle:@"Ok"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * action)
+                                   {
+                                       pinCode5TextField.text=@"";
+                                       pinCode6TextField.text=@"";
+                                       pinCode7TextField.text=@"";
+                                       pinCode8TextField.text=@"";
+                                       [pinCode5TextField becomeFirstResponder];
+                                   }]; //You can use a block here to handle a press on this button
+        [alertController addAction:actionOk];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    else
+    {
+        NSString*     macId=[Keychain getStringForKey:@"udid"];
+        [AppPreferences sharedAppPreferences].userObj = nil;
+        [[APIManager sharedManager] changePinOldPin:oldPin NewPin:newPin macID:macId];
+    
+    }
+}
+
+
+-(void)pinChangeResponseCheck:(NSNotification*)notificationObject
+{
+  //  NSDictionary* dic=notificationObject.object;
+//    " Case 1:
+//    {
+//        "code": 200,
+//        "pinChangeSuccess":true,
+//        "oldpin":"true"
+//    }
+//    
+//    Case 2:
+//    {
+//        "code": 401,
+//        "pinChangeSuccess":false,
+//        "oldpin":"true/false"
+//        
+//    } "}
+    
+    NSDictionary* responseDict=notificationObject.object;
+    NSString* responseCodeString=  [responseDict valueForKey:RESPONSE_CODE];
+    NSString* pinChangeSuccess=  [responseDict valueForKey:@"pinChangeSuccess"];
+    NSString* oldPin=  [responseDict valueForKey:@"oldpin"];
+
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    [hud hideAnimated:YES];
+    if ([responseCodeString intValue]==200 && [pinChangeSuccess intValue]==1 && [oldPin intValue]==1)
+    {
+        //gotResponse=true;
+//        [self.window.rootViewController.presentedViewController dismissViewControllerAnimated:NO completion:nil];
+//        
+//        RegistrationViewController* regiController=(RegistrationViewController *)[storyboard instantiateViewControllerWithIdentifier:@"RegistrationViewController"];
+//        [self.window.rootViewController presentViewController:regiController
+//                                                     animated:NO
+//                                                   completion:nil];
+        //[self dismissViewControllerAnimated:NO completion:nil];
+        
+        alertController = [UIAlertController alertControllerWithTitle:@"Pin code changed successfully"
+                                                              message:@"Please login with new pin code"
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+        actionDelete = [UIAlertAction actionWithTitle:@"Ok"
+                                                style:UIAlertActionStyleDefault
+                                              handler:^(UIAlertAction * action)
+                        {
+                            LoginViewController* regiController=(LoginViewController *)[storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                            [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:NO completion:nil];
+                            
+                            [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:regiController
+                                                                                                         animated:NO
+                                                                                                       completion:nil];
+                            [alertController dismissViewControllerAnimated:NO completion:nil];
+                        }]; //You can use a block here to handle a press on this button
+        [alertController addAction:actionDelete];
+        
+        
+       
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+        
+
+        
+        
+    }
+    else
+        if ([responseCodeString intValue]==401 && [oldPin intValue]==0)
+        {
+            // gotResponse=true;
+            alertController = [UIAlertController alertControllerWithTitle:@"Incorrect Old pin entered"
+                                                                  message:@""
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+            actionDelete = [UIAlertAction actionWithTitle:@"Ok"
+                                                    style:UIAlertActionStyleDefault
+                                                  handler:^(UIAlertAction * action)
+                            {
+                                pinCode1TextField.text=@"";
+                                pinCode2TextField.text=@"";
+                                pinCode3TextField.text=@"";
+                                pinCode4TextField.text=@"";
+                                pinCode5TextField.text=@"";
+                                pinCode6TextField.text=@"";
+                                pinCode7TextField.text=@"";
+                                pinCode8TextField.text=@"";
+                                [pinCode1TextField becomeFirstResponder];
+                                [alertController dismissViewControllerAnimated:YES completion:nil];
+                            
+                            }]; //You can use a block here to handle a press on this button
+            [alertController addAction:actionDelete];
+            
+            
+            
+            [self presentViewController:alertController animated:YES completion:nil];
+
+            
+        }
+        else
+            if ([responseCodeString intValue]==401 && [pinChangeSuccess intValue]==0 && [oldPin intValue]==1)
+            {
+                // gotResponse=true;
+                alertController = [UIAlertController alertControllerWithTitle:@"Unable to change pin"
+                                                                      message:@"Please try again"
+                                                               preferredStyle:UIAlertControllerStyleAlert];
+                actionDelete = [UIAlertAction actionWithTitle:@"OK"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * action)
+                                {
+                                    pinCode1TextField.text=@"";
+                                    pinCode2TextField.text=@"";
+                                    pinCode3TextField.text=@"";
+                                    pinCode4TextField.text=@"";
+                                    pinCode5TextField.text=@"";
+                                    pinCode6TextField.text=@"";
+                                    pinCode7TextField.text=@"";
+                                    pinCode8TextField.text=@"";
+                                    [pinCode1TextField becomeFirstResponder];
+                                    [alertController dismissViewControllerAnimated:YES completion:nil];
+                                    
+                                }]; //You can use a block here to handle a press on this button
+                [alertController addAction:actionDelete];
+                
+                
+              
+                
+                [self presentViewController:alertController animated:YES completion:nil];
+
+                
+            }
+
+}
+    - (IBAction)cancelButtonClicked:(id)sender
+{
+    pinCode1TextField.text=@"";
+    pinCode2TextField.text=@"";
+    pinCode3TextField.text=@"";
+    pinCode4TextField.text=@"";
+    pinCode5TextField.text=@"";
+    pinCode6TextField.text=@"";
+    pinCode7TextField.text=@"";
+    pinCode8TextField.text=@"";
+    [pinCode1TextField becomeFirstResponder];}
+
 @end

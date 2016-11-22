@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UserSettingsViewController : UIViewController<UIGestureRecognizerDelegate> 
+@interface UserSettingsViewController : UIViewController<UIGestureRecognizerDelegate,UITextFieldDelegate>
 {
     NSMutableArray* recordSettingsItemsarray;
     NSMutableArray* storageManagementItemsArray;
@@ -17,7 +17,7 @@
     NSMutableArray* radioButtonArray;
     UITapGestureRecognizer* tap;
     UITapGestureRecognizer* tap1;
-
+    
     UIView* abbreviationPopupView;
     AppPreferences* app;
 }

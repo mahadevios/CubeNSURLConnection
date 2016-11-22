@@ -1,2 +1,4 @@
-dependencies: /Work/cube-master\ 2/Cube/main.m \
-  /Work/cube-master\ 2/Cube/AppDelegate.h
+dependencies: \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/main.m \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/AppDelegate.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/Libraries/MBProgressHUD/MBProgressHUD.h

@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface InCompleteDictationViewController : UIViewController
-
+{
+    APIManager* app;
+    Database* db;
+}
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @end

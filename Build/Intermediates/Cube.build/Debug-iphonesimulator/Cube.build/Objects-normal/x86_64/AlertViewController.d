@@ -1,4 +1,4 @@
 dependencies: \
-  /Work/cube-master\ 2/Cube/ViewControllers/AlertViewController.m \
-  /Work/cube-master\ 2/Cube/ViewControllers/AlertViewController.h \
-  /Work/cube-master\ 2/Cube/ViewControllers/PopUpCustomView.h
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/AlertViewController.m \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/AlertViewController.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/PopUpCustomView.h

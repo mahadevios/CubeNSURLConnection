@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ListViewController : UIViewController
+@interface ListViewController : UIViewController<UIGestureRecognizerDelegate>
+- (IBAction)segmentChanged:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segment;
 @end

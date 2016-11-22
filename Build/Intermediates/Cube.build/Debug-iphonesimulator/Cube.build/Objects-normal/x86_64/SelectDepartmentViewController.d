@@ -1,5 +1,7 @@
 dependencies: \
-  /Work/cube-master\ 2/Cube/ViewControllers/SelectDepartmentViewController.m \
-  /Work/cube-master\ 2/Cube/ViewControllers/SelectDepartmentViewController.h \
-  /Work/cube-master\ 2/Cube/ViewControllers/MainTabBarViewController.h \
-  /Work/cube-master\ 2/Cube/LoginViewController.h
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/SelectDepartmentViewController.m \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/SelectDepartmentViewController.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/MainTabBarViewController.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/LoginViewController.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/Libraries/MBProgressHUD/MBProgressHUD.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/RegistrationViewController.h

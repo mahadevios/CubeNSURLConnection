@@ -15,9 +15,12 @@
     UITapGestureRecognizer* tapRecogniser2;
     UIView* overlayView;
     UITapGestureRecognizer* tap;
-
+    APIManager* app;
+    Database* db;
+    
 }
 @property (weak, nonatomic) IBOutlet UIView *transferredView;
 @property (weak, nonatomic) IBOutlet UIView *awaitingTransferView;
 @property (weak, nonatomic) IBOutlet UIView *transferFailedView;
+
 @end

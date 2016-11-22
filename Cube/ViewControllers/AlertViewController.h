@@ -9,5 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface AlertViewController : UIViewController
-
+{
+    Database* db;
+    APIManager* app;
+    int badgeCount;
+}
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @end

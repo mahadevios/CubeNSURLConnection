@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface SelectDepartmentViewController : UIViewController
+{
+    NSArray* departmentNameArray;
+}
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end

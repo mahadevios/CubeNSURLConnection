@@ -1,3 +1,3 @@
 dependencies: \
-  /Work/cube-master\ 2/Cube/ViewControllers/MainTabBarViewController.m \
-  /Work/cube-master\ 2/Cube/ViewControllers/MainTabBarViewController.h
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/MainTabBarViewController.m \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/MainTabBarViewController.h

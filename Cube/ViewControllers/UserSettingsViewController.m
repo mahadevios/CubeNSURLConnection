@@ -20,16 +20,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    if ([[self.view viewWithTag:112] respondsToSelector:@selector(edgesForExtendedLayout)])
-//        self.edgesForExtendedLayout = UIRectEdgeNone;
-
-    app=[AppPreferences sharedPreferences];
-    recordSettingsItemsarray=[[NSMutableArray alloc]initWithObjects:@"Save Dictation Waiting by",@"Confirm before saving",@"Alert before recording",@"Back to home after dictation",@"Record abbreviation", nil];
-    storageManagementItemsArray=[[NSMutableArray alloc]initWithObjects:@"Low Storage Threshold",@"Purge Deleted Data", nil];
-    PlaybackAutoRewindByArray=[[NSMutableArray alloc]initWithObjects:@"Change your password", nil];
+    //    if ([[self.view viewWithTag:112] respondsToSelector:@selector(edgesForExtendedLayout)])
+    //        self.edgesForExtendedLayout = UIRectEdgeNone;
+    poUpTableView.layer.cornerRadius=2.0f;
+    app = [AppPreferences sharedAppPreferences];
+    recordSettingsItemsarray=[[NSMutableArray alloc]initWithObjects:SAVE_DICTATION_WAITING_SETTING,CONFIRM_BEFORE_SAVING_SETTING,ALERT_BEFORE_RECORDING,BACK_TO_HOME_AFTER_DICTATION,RECORD_ABBREVIATION, nil];
+    storageManagementItemsArray=[[NSMutableArray alloc]initWithObjects:LOW_STORAGE_THRESHOLD,PURGE_DELETED_DATA, nil];
+    PlaybackAutoRewindByArray=[[NSMutableArray alloc]initWithObjects:CHANGE_YOUR_PASSWORD, nil];
     popUpOptionsArray=[[NSMutableArray alloc]init];
     radioButtonArray=[[NSMutableArray alloc]init];
-    // Do any additional setup after loading the view.
+    //uint64_t freeSpaceUnsignLong=    [self getFreeDiskspace];
+    //long freeMemory=(freeSpaceUnsignLong/1024ll)/1024ll;
+   // NSLog(@"Free Memory=%ld MB",freeMemory);
+    
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -39,18 +43,21 @@
     tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disMissPopView:)];
     tap.delegate=self;
     [[self.view viewWithTag:112] addGestureRecognizer:tap];
-
+    
     tap1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disMissPopView:)];
     tap1.delegate=self;
-
+    
     self.navigationItem.title=@"User Settings";
     self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"Back"] style:UIBarButtonItemStylePlain target:self action:@selector(popViewController:)];
     
-    NSLog(@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"dictationTime"]);
-    NSLog(@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"lowStorageThreshold"]);
-    NSLog(@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"numberOfDaysForDeletedData"]);
-
+    //NSLog(@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:LOW_STORAGE_THRESHOLD]);
     
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+ //[APIManager sharedManager].userSettingsOpened=NO;
+    [APIManager sharedManager].userSettingsClosed=YES;
 }
 -(void)popViewController:(id)sender
 {
@@ -58,71 +65,79 @@
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSLog(@"section");
+    //NSLog(@"section");
     if ([tableView isEqual:self.poUpTableView])
     {
         return 1;
     }
     else
-    return 3;
+        return 3;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-//    NSLog(@"viewforHeader");
+    //    NSLog(@"viewforHeader");
+    
     if ([tableView isEqual:self.userSettingsTableView])
     {
-  
-    UIView* sectionHeaderView=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, tableView.frame.origin.y, tableView.frame.size.width, 60)];
-    sectionHeaderView.backgroundColor=[UIColor colorWithRed:239/255.0 green:239/255.0 blue:244/255.0 alpha:1];
-    
-    UILabel* sectionTitleLabel=[[UILabel alloc]initWithFrame:CGRectMake(16, 20, tableView.frame.size.width*0.5, 17)];
-    [sectionTitleLabel setFont:[UIFont systemFontOfSize:16.0]];
-    [sectionHeaderView addSubview:sectionTitleLabel];
-    
-    //for upper undeline view of section
-    if (section!=0)
-    {
-        UIView* lineView=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, 0, tableView.frame.size.width, 1)];
-        lineView.backgroundColor=[UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1];
-        [sectionHeaderView addSubview:lineView];
-    }
-    
-    //for lower underline view of section
-    UIView* lineView1=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, 60, tableView.frame.size.width, 1)];
-    lineView1.backgroundColor=[UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1];
-    [sectionHeaderView addSubview:lineView1];
-    
-    if (section==0)
-    {
-        sectionTitleLabel.text=@"Record Settings";
-        return sectionHeaderView;
-    }
-    else
-    if (section==1)
-    {
-        sectionTitleLabel.text=@"Storage Management";
-        return sectionHeaderView;
-    }
-    else
-    if (section==2)
-    {
-        sectionTitleLabel.text=@"Playback Auto-Rewind by";
-        return sectionHeaderView;
-    }
-    else
-        return sectionHeaderView;
+        
+        UIView* sectionHeaderView=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, tableView.frame.origin.y, tableView.frame.size.width, 60)];
+        sectionHeaderView.backgroundColor=[UIColor colorWithRed:239/255.0 green:239/255.0 blue:244/255.0 alpha:1];
+        
+        UILabel* sectionTitleLabel=[[UILabel alloc]initWithFrame:CGRectMake(16, 20, tableView.frame.size.width*0.9, 17)];
+        [sectionTitleLabel setFont:[UIFont systemFontOfSize:16.0]];
+        [sectionHeaderView addSubview:sectionTitleLabel];
+        
+        //for upper undeline view of section
+        if (section!=0)
+        {
+            UIView* lineView=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, 0, tableView.frame.size.width, 1)];
+            lineView.backgroundColor=[UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1];
+            [sectionHeaderView addSubview:lineView];
+        }
+        
+        //for lower underline view of section
+        UIView* lineView1=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, 60, tableView.frame.size.width, 1)];
+        lineView1.backgroundColor=[UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1];
+        [sectionHeaderView addSubview:lineView1];
+        
+        if (section==0)
+        {
+            sectionTitleLabel.text=@"Record Settings";
+            return sectionHeaderView;
+        }
+        else
+            if (section==1)
+            {
+                sectionTitleLabel.text=@"Storage Management";
+                return sectionHeaderView;
+            }
+            else
+                if (section==2)
+                {
+                    sectionTitleLabel.text=@"Account Settings";
+                    return sectionHeaderView;
+                }
+                else
+                    return sectionHeaderView;
     }
     else
     {
         UIView* sectionHeaderView=[[UIView alloc]initWithFrame:CGRectMake(tableView.frame.origin.x, tableView.frame.origin.y, tableView.frame.size.width, 60)];
+        UILabel* sectionTitleBackgroundLabelLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 40)];
+        sectionTitleBackgroundLabelLabel.backgroundColor=[UIColor whiteColor];
+
         UILabel* sectionTitleLabel=[[UILabel alloc]initWithFrame:CGRectMake(16, 20, tableView.frame.size.width, 17)];
+        //sectionTitleLabel.backgroundColor=[UIColor whiteColor];
+        
         [sectionTitleLabel setFont:[UIFont systemFontOfSize:16.0]];
         UIFont *currentFont = sectionTitleLabel.font;
         UIFont *newFont = [UIFont fontWithName:[NSString stringWithFormat:@"%@-Bold",currentFont.fontName] size:currentFont.pointSize];
         sectionTitleLabel.font = newFont;
+        [sectionHeaderView addSubview:sectionTitleBackgroundLabelLabel];
+
         [sectionHeaderView addSubview:sectionTitleLabel];
-        
+
         if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedRowAndSection"] isEqualToString:@"00"])
         {
             sectionTitleLabel.text=@"Select Time";
@@ -143,7 +158,7 @@
         {
             sectionTitleLabel.text=@"";
         }
-
+        
         return sectionHeaderView;
     }
 }
@@ -157,12 +172,12 @@
             return 40;
         }
         else
-        return 50;
+            return 50;
     }
     else
-    return 60;
+        return 60;
     
-
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -178,26 +193,26 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-
+    
     if ([tableView isEqual:self.userSettingsTableView])
     {
-   
-     if (section==0)
-     {
-        return recordSettingsItemsarray.count;
-     }
-     else
-     if (section==1)
-     {
-         return storageManagementItemsArray.count;
-     }
-     else
-     if (section==2)
-     {
-        return PlaybackAutoRewindByArray.count;
-     }
-     else
-        return 0;
+        
+        if (section==0)
+        {
+            return recordSettingsItemsarray.count;
+        }
+        else
+            if (section==1)
+            {
+                return storageManagementItemsArray.count;
+            }
+            else
+                if (section==2)
+                {
+                    return PlaybackAutoRewindByArray.count;
+                }
+                else
+                    return 0;
     }
     else
         return popUpOptionsArray.count;
@@ -225,7 +240,7 @@
                 [self performSelector:@selector(createSwitch:) withObject:switchobj afterDelay:0.0];
                 
             }
-           
+            
             
         }
         //CGRectMake(self.view.frame.origin.x+10, self.view.frame.origin.y+20, self.view.frame.size.width-40, 200)
@@ -250,8 +265,8 @@
             UILabel* nameLabel= [cell viewWithTag:101];
             nameLabel.text=[PlaybackAutoRewindByArray objectAtIndex:indexPath.row];
         }
-
-     return cell;
+        
+        return cell;
     }
     else
     {
@@ -272,30 +287,30 @@
             radioButtonArray=[NSMutableArray arrayWithObjects:button,button1,button2,button3, nil];
             
             
-
+            
         }
         
-
-       
+        
+        
         if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedRowAndSection"] isEqualToString:@"00"])
         {
-
-            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"dictationTime"] isEqualToString:selectOptionLabel.text])
+            
+            if ([[[NSUserDefaults standardUserDefaults] valueForKey:SAVE_DICTATION_WAITING_SETTING] isEqualToString:selectOptionLabel.text])
             {
                 UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 19, 19)];
                 [button setBackgroundImage:[UIImage imageNamed:@"RadioButton"] forState:UIControlStateNormal];
                 [radioButtonArray replaceObjectAtIndex:indexPath.row withObject:button];
             }
             
-
+            
             [cell1 addSubview:[radioButtonArray objectAtIndex:indexPath.row]];
-
+            
         }
         
-
+        
         if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedRowAndSection"] isEqualToString:@"10"])
         {
-            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"lowStorageThreshold"] isEqualToString:selectOptionLabel.text])
+            if ([[[NSUserDefaults standardUserDefaults] valueForKey:LOW_STORAGE_THRESHOLD] isEqualToString:selectOptionLabel.text])
             {
                 UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 19, 19)];
                 [button setBackgroundImage:[UIImage imageNamed:@"RadioButton"] forState:UIControlStateNormal];
@@ -306,21 +321,21 @@
             
             
         }
-
+        
         if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedRowAndSection"] isEqualToString:@"11"])
         {
-            if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"numberOfDaysForDeletedData"] isEqualToString:selectOptionLabel.text])
+            if ([[[NSUserDefaults standardUserDefaults] valueForKey:PURGE_DELETED_DATA] isEqualToString:selectOptionLabel.text])
             {
                 UIButton* button=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, 19, 19)];
                 [button setBackgroundImage:[UIImage imageNamed:@"RadioButton"] forState:UIControlStateNormal];
                 [radioButtonArray replaceObjectAtIndex:indexPath.row withObject:button];
             }
             
-                [cell1 addSubview:[radioButtonArray objectAtIndex:indexPath.row]];
-                
+            [cell1 addSubview:[radioButtonArray objectAtIndex:indexPath.row]];
+            
             
         }
-
+        
         //selectOptionLabel.text=@"asdssdjkkjjkjkiloljlklkkkjklkljkljkljkljkl";
         return cell1;
     }
@@ -341,17 +356,47 @@
     {
         UISwitch *onoff = [[UISwitch alloc] initWithFrame: CGRectMake(sender.tableview.frame.size.width-80,sender.label.frame.origin.y-7, 0, 0)];
         onoff.tag=sender.cell.tag;
+        if (onoff.tag==1)
+        {
+            [onoff setOn:[[NSUserDefaults standardUserDefaults] boolForKey:CONFIRM_BEFORE_SAVING_SETTING]];
+        }
+
+        if (onoff.tag==2)
+        {
+            [onoff setOn:[[NSUserDefaults standardUserDefaults] boolForKey:ALERT_BEFORE_RECORDING]];
+        }
+        if (onoff.tag==3)
+        {
+            [onoff setOn:[[NSUserDefaults standardUserDefaults] boolForKey:BACK_TO_HOME_AFTER_DICTATION]];
+        }
+
         [onoff addTarget: self action: @selector(flip:) forControlEvents:UIControlEventValueChanged];
         [sender.cell addSubview:onoff];
     }
-
+    
 }
 
 -(void)flip:(UISwitch*)sender
 {
- 
-    NSLog(@"%ld",sender.tag);
+    if (sender.tag==1)
+    {
+        bool confirmBeforeSaving=sender.isOn;
+        [[NSUserDefaults standardUserDefaults] setBool:confirmBeforeSaving forKey:CONFIRM_BEFORE_SAVING_SETTING];
+    }
+    if (sender.tag==2)
+    {
+        bool alertBeforeSaving=sender.isOn;
+        [[NSUserDefaults standardUserDefaults] setBool:alertBeforeSaving forKey:ALERT_BEFORE_RECORDING];
 
+    }
+    if (sender.tag==3)
+    {
+        bool backToHomeAfterDictation=sender.isOn;
+        [[NSUserDefaults standardUserDefaults] setBool:backToHomeAfterDictation forKey:BACK_TO_HOME_AFTER_DICTATION];
+
+    }
+    //NSLog(@"%ld",sender.tag);
+    
 }
 
 
@@ -359,16 +404,16 @@
 {
     if ([tableView isEqual:userSettingsTableView])
     {
-   
+        
         
         if ((indexPath.section==0 && indexPath.row==0) || indexPath.section==1)
         {
             [[[[UIApplication sharedApplication] keyWindow] viewWithTag:112] setHidden:NO];
-
+            
             [[self.view viewWithTag:112] setFrame:[[UIScreen mainScreen] bounds]];
-
+            
             [[self.view viewWithTag:112] setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.2]];
-    
+            
             if (indexPath.section==0)
             {
                 if (indexPath.row==0)
@@ -397,17 +442,17 @@
                     [self.poUpTableView reloadData];
                 }
             }
-      
+            
         }
         
         if (indexPath.section==0 && indexPath.row==4)
         {
             
-                abbreviationPopupView=  [[PopUpCustomView alloc]initWithFrame:CGRectMake(self.view.frame.origin.x+20, self.view.frame.origin.y+100, self.view.frame.size.width-40, 200) sender:self];
+            abbreviationPopupView=  [[PopUpCustomView alloc]initWithFrame:CGRectMake(self.view.frame.origin.x+20, self.view.frame.origin.y+100, self.view.frame.size.width-40, 200) sender:self];
             [abbreviationPopupView addGestureRecognizer:tap1];
             abbreviationPopupView.tag=121;
-                [[[UIApplication sharedApplication] keyWindow] addSubview:abbreviationPopupView];
-           
+            [[[UIApplication sharedApplication] keyWindow] addSubview:abbreviationPopupView];
+            
         }
         if (indexPath.section==2 && indexPath.row==0)
         {
@@ -422,7 +467,7 @@
         if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedRowAndSection"] isEqualToString:@"00"])
         {
             UILabel* timeLabel= [selectedCell viewWithTag:114];
-            [[NSUserDefaults standardUserDefaults] setValue:timeLabel.text forKey:@"dictationTime"];
+            [[NSUserDefaults standardUserDefaults] setValue:timeLabel.text forKey:SAVE_DICTATION_WAITING_SETTING];
             
             UIButton* button = [radioButtonArray objectAtIndex:indexPath.row];
             [button setBackgroundImage:[UIImage imageNamed:@"RadioButton"] forState:UIControlStateNormal];
@@ -432,24 +477,24 @@
                 {
                     UIButton* button = [radioButtonArray objectAtIndex:indexPath.row];
                     [button setBackgroundImage:[UIImage imageNamed:@"RadioButton"] forState:UIControlStateNormal];
-
+                    
                 }
                 else
                 {
                     UIButton* button = [radioButtonArray objectAtIndex:i];
                     [button setBackgroundImage:[UIImage imageNamed:@"RadioButtonClear"] forState:UIControlStateNormal];
-
+                    
                 }
             }
-          
+            
             
         }
         
         if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedRowAndSection"] isEqualToString:@"10"])
         {
             UILabel* timeLabel= [selectedCell viewWithTag:114];
-            [[NSUserDefaults standardUserDefaults] setValue:timeLabel.text forKey:@"lowStorageThreshold"];
-
+            [[NSUserDefaults standardUserDefaults] setValue:timeLabel.text forKey:LOW_STORAGE_THRESHOLD];
+            
             
             for (int i=0; i<radioButtonArray.count; i++)
             {
@@ -470,7 +515,7 @@
         if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedRowAndSection"] isEqualToString:@"11"])
         {
             UILabel* timeLabel= [selectedCell viewWithTag:114];
-            [[NSUserDefaults standardUserDefaults] setValue:timeLabel.text forKey:@"numberOfDaysForDeletedData"];
+            [[NSUserDefaults standardUserDefaults] setValue:timeLabel.text forKey:PURGE_DELETED_DATA];
             
             for (int i=0; i<radioButtonArray.count; i++)
             {
@@ -487,13 +532,13 @@
                     
                 }
             }
-
+            
         }
         [self performSelector:@selector(hideTableView) withObject:nil afterDelay:0.2];
-
+        
     }
     
-
+    
 }
 
 -(void)hideTableView
@@ -511,27 +556,17 @@
             return NO;
         }
     }
-//    if (abbreviationPopupView.superview != nil)
-//    {
-//        if ([touch.view isDescendantOfView:abbreviationPopupView])
-//        {
-//            return NO;
-//        }
-//    }
+    
     return YES; // handle the touch
 }
 
 -(void)disMissPopView:(id)sender
 {
-   // [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"selectedRowAndSection"];
-   // [poUpTableView reloadData];
     
-    
-
     radioButtonArray=nil;
     radioButtonArray=[[NSMutableArray alloc]init];
     [[[[UIApplication sharedApplication] keyWindow] viewWithTag:112] setHidden:YES];
-
+    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -542,23 +577,65 @@
 -(void)cancel:(id)sender
 {
     [[[[UIApplication sharedApplication] keyWindow] viewWithTag:121] removeFromSuperview];
-
+    
 }
 
 -(void)save:(id)sender
 {
+    UITextField* abbreviationTextfiled= [[[[UIApplication sharedApplication] keyWindow] viewWithTag:121] viewWithTag:122];
+    if (abbreviationTextfiled.text.length==0)
+    {
+        [[NSUserDefaults standardUserDefaults] setValue:@"MOB-" forKey:RECORD_ABBREVIATION];
+        
+    }
+    if (abbreviationTextfiled.text.length>0)
+    {
+        [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%@-",abbreviationTextfiled.text] forKey:RECORD_ABBREVIATION];
+        
+    }
+    //NSLog(@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:RECORD_ABBREVIATION]);
     [[[[UIApplication sharedApplication] keyWindow] viewWithTag:121] removeFromSuperview];
+    
+}
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    // Prevent crashing undo bug – see note below.
+    if(range.length + range.location > textField.text.length)
+    {
+        return NO;
+    }
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    return newLength <= 5;
 }
 /*
-#pragma mark - Navigation
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(uint64_t)getFreeDiskspace {
+    uint64_t totalSpace = 0;
+    uint64_t totalFreeSpace = 0;
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    
+    if (dictionary) {
+        NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
+        totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
+        //        NSLog(@"Memory Capacity of %llu MiB with %llu MiB Free memory available.", ((totalSpace/1024ll)/1024ll), ((totalFreeSpace/1024ll)/1024ll));
+    } else {
+        //NSLog(@"Error Obtaining System Memory Info: Domain = %@, Code = %ld", [error domain], (long)[error code]);
+    }
+    
+    return totalFreeSpace;
 }
-*/
 
 - (IBAction)backButtonPressed:(id)sender
 {

@@ -1,5 +1,6 @@
 dependencies: \
-  /Work/cube-master\ 2/Cube/ViewControllers/HomeViewController.m \
-  /Work/cube-master\ 2/Cube/ViewControllers/HomeViewController.h \
-  /Work/cube-master\ 2/Cube/ViewControllers/TransferListViewController.h \
-  /Work/cube-master\ 2/Cube/ViewControllers/PopUpCustomView.h
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/HomeViewController.m \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/HomeViewController.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/TransferListViewController.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/PopUpCustomView.h \
+  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/AlertViewController.h
