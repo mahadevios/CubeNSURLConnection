@@ -1,0 +1,31 @@
+-x
+objective-c++
+-arch
+armv7
+-std=gnu++11
+-stdlib=libc++
+-fobjc-arc
+-fmodules
+-fmodules-cache-path=/Users/admin/Library/Developer/Xcode/DerivedData/ModuleCache
+-fbuild-session-file=/Users/admin/Library/Developer/Xcode/DerivedData/ModuleCache/Session.modulevalidation
+-fpascal-strings
+-Os
+-fno-common
+-DNS_BLOCK_ASSERTIONS=1
+-DOBJC_OLD_DISPATCH_PROTOTYPES=0
+-isysroot
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk
+-miphoneos-version-min=9.2
+-g
+-fvisibility=hidden
+-fvisibility-inlines-hidden
+-fembed-bitcode
+-iquote
+-iquote
+-I/Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/ArchiveIntermediates/Cube/BuildProductsPath/Release-iphoneos/include
+-I/Developer/Extras/CoreAudio/PublicUtility
+-F/Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/ArchiveIntermediates/Cube/BuildProductsPath/Release-iphoneos
+arm-apple-darwin15.4.0
+"4.2.1 Compatible Apple LLVM 7.3.0 (clang-703.0.31)"
+SDK_PRODUCT_BUILD_VERSION=13E230
+13E230
