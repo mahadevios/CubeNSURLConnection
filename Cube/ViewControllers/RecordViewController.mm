@@ -7,6 +7,8 @@
 // tag view 200 series are of storyboard reference Views
 // tag with 300 series are of programmatically created actual circle Views
 
+
+// audio compression(DoConvert tuto) http://stackoverflow.com/questions/6576530/ios-how-to-use-extaudiofileconvert-sample-in-a-new-project
 #import "RecordViewController.h"
 #import "PopUpCustomView.h"
 #import "DepartMent.h"
@@ -91,7 +93,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
    
     if (!stopped)
     {
-    
+        NSLog(@"in save");
         [self saveAudioRecordToDatabase];
         NSString* destinationPath=[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,self.recordedAudioFileName]];
         NSError* error1;
@@ -1009,6 +1011,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                             
                             [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUpload" fileName:self.recordedAudioFileName];
+                            
                             [app uploadFileToServer:self.recordedAudioFileName];
                             [[NSUserDefaults standardUserDefaults] setValue:@"yes" forKey:@"dismiss"];
                             sender.userInteractionEnabled=NO;

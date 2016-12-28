@@ -11,7 +11,7 @@
 
 //#define  BASE_URL_PATH                        @"http://www.xanadutec.net/cubeagent_webapi/api"
 //
-////#define  BASE_URL_PATH                        @"http://192.168.3.150:8081/CubeAPI/api"
+//#define  BASE_URL_PATH                        @"http://192.168.3.150:8081/CubeAPI/api"
 //#define  CHECK_DEVICE_REGISTRATION            @"MobileCheckDeviceRegistration"
 //#define  AUTHENTICATE_API                     @"MobileAuthenticate"
 //#define  ACCEPT_PIN_API                       @"MobileAcceptPIN"
@@ -81,6 +81,8 @@
 #define RESPONSE_CODE                          @"code"
 #define RESPONSE_PIN_VERIFY                    @"pinverify"
 
+
+#define SHARED_GROUP_IDENTIFIER                @"group.com.coreFlexSolutions.CubeDictate"
 //#define MAC_ID                                 @"e0:2c:b2:eb:5a:8e"
 //#define MAC_ID                                 @"e0:2c:b2:ec:5a:8e"
 

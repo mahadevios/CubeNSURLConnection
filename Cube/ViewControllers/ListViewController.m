@@ -30,6 +30,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [segment setSelectedSegmentIndex:0];
     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"More"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserSettings:)];
     
     self.navigationItem.title=@"List";

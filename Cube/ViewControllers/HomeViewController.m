@@ -11,6 +11,10 @@
 #import "PopUpCustomView.h"
 #import "AlertViewController.h"
 #import "NSData+AES256.h"
+
+//#import <iTunesLibrary/ITLibrary.h>
+
+
 @interface HomeViewController ()
 
 @end
@@ -39,6 +43,7 @@
 //    NSData* str1= [encr AES256DecryptWithKey:@"mahadev"];
 //    
 //    NSString* df=[[NSString alloc]initWithData:str1 encoding:NSUTF8StringEncoding];
+    [AppPreferences sharedAppPreferences].isRecordView=NO;
     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"More"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserSettings:)];
     transferFailedView.layer.cornerRadius=4.0f;
     transferredView.layer.cornerRadius=4.0f;

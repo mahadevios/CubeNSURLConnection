@@ -2,7 +2,6 @@
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/NSData+AES256.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/SBJson4StreamTokeniser.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/AudioSessionManager.o
-/Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/RNDecryptor.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/SBJson4Writer.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/InCompleteRecordViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/DownloadMetaDataJob.o
@@ -11,7 +10,6 @@
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/LoginViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/PopUpCustomView.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/APIManager.o
-/Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/RNCryptorEngine.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/UserSettingsViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/AudioDetails.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/SBJson4StreamWriter.o
@@ -26,11 +24,9 @@
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/SBJson4StreamParserState.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/UIDevice+Identifier.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/TransferredOrDeletedAudioDetailsViewController.o
-/Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/RNEncryptor.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/RecordTabViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/RegistrationViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/RecordViewController.o
-/Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/RNCryptor.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/HomeViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/MainTabBarViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/AppPreferences.o
@@ -45,6 +41,5 @@
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/ChangePasswordViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/AudioDetailsViewController.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/SBJson4StreamWriterState.o
-/Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/StringEncryption.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/DepartMent.o
 /Users/admin/Documents/CubeBackUp/cube-master 2__16-aug/Build/Intermediates/Cube.build/Debug-iphonesimulator/Cube.build/Objects-normal/x86_64/CAStreamBasicDescription.o

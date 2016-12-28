@@ -74,7 +74,7 @@
     if ([responseCodeString intValue]==401)
     {
         //[self dismissViewControllerAnimated:NO completion:nil];
-        [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Error" withMessage:@"Account id or password is incorrect, please try again" withCancelText:nil withOkText:@"OK" withAlertTag:1000];
+        [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Authentication failed!" withMessage:@"Account id or password is incorrect, please try again" withCancelText:nil withOkText:@"OK" withAlertTag:1000];
         IDTextField.text=nil;
         passwordTextfield.text=nil;
     }
@@ -136,8 +136,10 @@
 }
 - (IBAction)cancelButtonClicked:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+    IDTextField.text=@"";
+    passwordTextfield.text=@"";
+    [IDTextField becomeFirstResponder];
+    [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Hit home button to exit" withMessage:@"" withCancelText:nil withOkText:@"OK" withAlertTag:1000];}
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {

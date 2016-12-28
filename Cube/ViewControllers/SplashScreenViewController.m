@@ -142,13 +142,6 @@
         //macId=[NSString stringWithFormat:@"%@123456",macId];
         if (!APIcalled)
         {
-//            NSData* data=[macId dataUsingEncoding:NSUTF8StringEncoding];
-//            NSData* macIdData= [data AES256EncryptWithKey:SECRET_KEY];
-////            NSString *string = [[NSString alloc] initWithData:macIdData encoding:NSUTF8StringEncoding];
-//
-//            NSData *daes = [macIdData base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
-//            NSString *stringCrypt = [[NSString alloc] initWithData:daes encoding:NSUTF8StringEncoding];
-
 
             [[APIManager sharedManager] checkDeviceRegistrationMacID:macId];
             APIcalled=true;

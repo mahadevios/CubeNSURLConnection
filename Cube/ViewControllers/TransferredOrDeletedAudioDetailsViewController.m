@@ -351,7 +351,7 @@
                             int mobileDictationIdVal=[[Database shareddatabase] getMobileDictationIdFromFileName:filName];
 
                             [[Database shareddatabase] updateAudioFileUploadedStatus:@"Resend" fileName:filName dateAndTime:date mobiledictationidval:mobileDictationIdVal];
-
+                            
                             [app uploadFileToServer:filName];
                             
                            // [self dismissViewControllerAnimated:YES completion:nil];

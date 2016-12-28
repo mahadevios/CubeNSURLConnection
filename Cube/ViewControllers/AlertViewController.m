@@ -64,7 +64,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return 3;
     
 }
 
@@ -80,9 +80,15 @@
         noDictationLabel.text=[NSString stringWithFormat:@"%d",app.incompleteFileTransferCount];
     }
     else
+        if (indexPath.row==1)
     {
         inCompleteDictationLabel.text=@"No Dictation";
         noDictationLabel.text=@"0";
+    }
+    else
+    {
+        inCompleteDictationLabel.text=@"Imported files";
+
     }
     return cell;
 }
@@ -92,6 +98,11 @@
     if (indexPath.row==0)
     {
     [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"InCompleteDictationViewController"] animated:YES];
+    }
+    if (indexPath.row==2)
+    {
+       // [self.navigationController presentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"ImportedAudioViewController"] animated:YES completion:nil];
+        [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"ImportedAudioViewController"] animated:YES];
     }
 }
 

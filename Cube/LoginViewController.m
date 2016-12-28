@@ -93,7 +93,7 @@
     {
         [hud hideAnimated:YES];
 
-        [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Incorrect pin entered" withMessage:@"Please try again" withCancelText:nil withOkText:@"OK" withAlertTag:1000];
+        [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Incorrect PIN entered" withMessage:@"Please try again" withCancelText:nil withOkText:@"OK" withAlertTag:1000];
         pinCode1TextField.text=@"";
         pinCode2TextField.text=@"";
         pinCode3TextField.text=@"";
@@ -222,8 +222,8 @@
 
 - (IBAction)submitButtonCilcked:(id)sender
 {
-    if ([AppPreferences sharedAppPreferences].isReachable)
-    {
+//    if ([AppPreferences sharedAppPreferences].isReachable)
+//    {
    
     NSString* title;
     NSString* message;
@@ -231,8 +231,8 @@
     UIAlertAction *actionOk;
     if ([pinCode1TextField.text isEqual:@""] || [pinCode2TextField.text isEqual:@""]|| [pinCode3TextField.text isEqual:@""] || [pinCode4TextField.text isEqual:@""])
     {
-        title=@"Incomplete pin code";
-        message=@"Please enter pin code properly";
+        title=@"Incomplete PIN code!";
+        message=@"Please enter PIN code properly";
         alertController = [UIAlertController alertControllerWithTitle:title
                                                               message:message
                                                        preferredStyle:UIAlertControllerStyleAlert];
@@ -282,28 +282,38 @@
             }
         }
         
-        //hud.label.text = NSLocalizedString(@"Please wait...", @"Validating credentials");
-        hud.minSize = CGSizeMake(150.f, 100.f);
-        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeIndeterminate;
-        hud.label.text = @"Validating pin";
-        hud.detailsLabel.text = @"Please wait";
-        NSString*     macId=[Keychain getStringForKey:@"udid"];
+        else
+        {
+               if ([AppPreferences sharedAppPreferences].isReachable)
+                {
+                    //hud.label.text = NSLocalizedString(@"Please wait...", @"Validating credentials");
+                    hud.minSize = CGSizeMake(150.f, 100.f);
+                    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                    hud.mode = MBProgressHUDModeIndeterminate;
+                    hud.label.text = @"Validating PIN";
+                    hud.detailsLabel.text = @"Please wait";
+                    NSString*     macId=[Keychain getStringForKey:@"udid"];
 
-        [pinCode4TextField resignFirstResponder];
-//        [pinCode1TextField resignFirstResponder];
+                    [pinCode4TextField resignFirstResponder];
+                    //        [pinCode1TextField resignFirstResponder];
         
         
         
-        [[APIManager sharedManager] validatePinMacID:macId Pin:pin];
-        //[[APIManager sharedManager] authenticateUserMacID:@"68:FB:7E:9E:7D:51" password:@"d" username:@"SAN"];
-
+                    [[APIManager sharedManager] validatePinMacID:macId Pin:pin];
+                    //[[APIManager sharedManager] authenticateUserMacID:@"68:FB:7E:9E:7D:51" password:@"d" username:@"SAN"];
+                }
+               else
+               {
+                   [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"No internet connection!" withMessage:@"Please check your inernet connection and try again." withCancelText:nil withOkText:@"OK" withAlertTag:1000];
+               }
+        }
+        
     }
-    }
-    else
-    {
-        [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"No internet connection!" withMessage:@"Please check your inernet connection and try again." withCancelText:nil withOkText:@"OK" withAlertTag:1000];
-    }
+//    }
+//    else
+//    {
+//        [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"No internet connection!" withMessage:@"Please check your inernet connection and try again." withCancelText:nil withOkText:@"OK" withAlertTag:1000];
+//    }
     
   
 }

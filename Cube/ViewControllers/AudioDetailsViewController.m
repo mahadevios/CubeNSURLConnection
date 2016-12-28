@@ -73,9 +73,16 @@
         audiorecordDict= [app.todaysFileTransferNamesArray objectAtIndex:self.selectedRow];
     }
     else
+        if ([self.selectedView isEqualToString:@"Transfer Failed"])
+   
     {
         [transferDictationButton setTitle:@"Resend" forState:UIControlStateNormal];
         audiorecordDict= [app.failedTransferNamesArray objectAtIndex:self.selectedRow];
+    }
+    else
+    {
+        [transferDictationButton setTitle:@"Transfer" forState:UIControlStateNormal];
+        audiorecordDict= [[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray objectAtIndex:self.selectedRow];
     }
     filenameLabel.text=[audiorecordDict valueForKey:@"RecordItemName"];
     dictatedOnLabel.text=[audiorecordDict valueForKey:@"RecordCreatedDate"];
@@ -110,7 +117,6 @@
 {
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME_COPY];
     DepartMent *deptObj1 = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    NSLog(@"%ld",deptObj1.Id);
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:SELECTED_DEPARTMENT_NAME];
     [UIApplication sharedApplication].idleTimerDisabled = NO;
 
@@ -405,6 +411,10 @@
                                 int mobileDictationIdVal=[[Database shareddatabase] getMobileDictationIdFromFileName:filName];
                                 [[Database shareddatabase] updateAudioFileUploadedStatus:@"Resend" fileName:filName dateAndTime:date mobiledictationidval:mobileDictationIdVal];
 
+                                if ([AppPreferences sharedAppPreferences].isReachable)
+                                {
+                                    [AppPreferences sharedAppPreferences].fileUploading=YES;
+                                }
                                 [app uploadFileToServer:filName];
 //                                [self dismissViewControllerAnimated:YES completion:nil];
                                 
@@ -448,6 +458,10 @@
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                             
                             [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUpload" fileName:filName];
+                            if ([AppPreferences sharedAppPreferences].isReachable)
+                            {
+                                [AppPreferences sharedAppPreferences].fileUploading=YES;
+                            }
                             [app uploadFileToServer:filName];
                             //[self dismissViewControllerAnimated:YES completion:nil];
 
@@ -494,6 +508,7 @@
 
                                         [[Database shareddatabase] updateAudioFileUploadedStatus:@"Resend" fileName:filName dateAndTime:date mobiledictationidval:mobileDictationIdVal];
 
+                                       
                                         [app uploadFileToServer:filName];
                                      //   [self dismissViewControllerAnimated:YES completion:nil];
 
@@ -618,10 +633,8 @@
     //    NSData *data1 = [NSKeyedArchiver archivedDataWithRootObject:deptObj];
     NSData *data1 = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
     DepartMent *deptObj = [NSKeyedUnarchiver unarchiveObjectWithData:data1];
-    NSLog(@"%ld",deptObj.Id);
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME_COPY];
     DepartMent *deptObj1 = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    NSLog(@"%ld",deptObj1.Id);
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:SELECTED_DEPARTMENT_NAME];
     [popupView removeFromSuperview];
 }

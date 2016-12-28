@@ -28,9 +28,10 @@
 
 @property (nonatomic,assign)    BOOL                        recordNew;
 @property (nonatomic,assign)    BOOL                        recordingNew;
-@property (nonatomic)    int                        selectedTabBarIndex;
+@property (nonatomic)    int                                selectedTabBarIndex;
 @property (nonatomic,assign)    BOOL                        isRecordView;
-
+@property (nonatomic,assign)    BOOL                        fileUploading;
+@property (nonatomic,strong) NSMutableArray*                importedFilesAudioDetailsArray;
 @property (nonatomic, strong) User *userObj;
 
 +(AppPreferences *) sharedAppPreferences;

@@ -521,6 +521,8 @@ static APIManager *singleton = nil;
 
             [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:date mobiledictationidval:0];
  
+            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
 //            [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:@"" mobiledictationidval:0];
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
             

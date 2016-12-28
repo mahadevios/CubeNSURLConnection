@@ -59,6 +59,7 @@
     UIBackgroundTaskIdentifier task;
     NSString* bsackUpAudioFileName;
     bool composed;
+    bool isRecording;
 }
 @property (nonatomic)     AVAudioPlayer       *player;
 @property (nonatomic)     AVAudioRecorder     *recorder;

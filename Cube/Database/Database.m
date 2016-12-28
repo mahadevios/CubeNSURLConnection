@@ -1435,4 +1435,246 @@ static Database *db;
 }
 
 
+-(int)getImportedFileCount
+{
+    Database *db=[Database shareddatabase];
+    NSString *dbPath=[db getDatabasePath];
+    sqlite3_stmt *statement;
+    sqlite3* feedbackAndQueryTypesDB;
+    int transferStatus;
+    NSString *query3=[NSString stringWithFormat:@"Select Count(*) from CubeData Where newDataUpdate=%d",5];
+    
+    if(sqlite3_open([dbPath UTF8String], &feedbackAndQueryTypesDB) == SQLITE_OK)// 1. Open The DataBase.
+    {
+        if (sqlite3_prepare_v2(feedbackAndQueryTypesDB, [query3 UTF8String], -1, &statement, NULL) == SQLITE_OK)// 2. Prepare the query
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                
+                // [app.feedOrQueryDetailMessageArray addObject:[NSString stringWithUTF8String:message]];
+                //                departmentId=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement, 0)];
+                transferStatus=sqlite3_column_int(statement, 0);
+                
+            }
+        }
+        else
+        {
+            //NSLog(@"Can't preapre query due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+        }
+    }
+    else
+    {
+        //NSLog(@"can't open db due error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    }
+    
+    if (sqlite3_finalize(statement) == SQLITE_OK)
+    {
+        //NSLog(@"statement is finalized");
+    }
+    else
+        // NSLog(@"Can't finalize due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    {}
+    
+    if (sqlite3_close(feedbackAndQueryTypesDB) == SQLITE_OK)
+    {
+        //NSLog(@"db is closed");
+    }
+    else
+    {
+        // NSLog(@"Db is not closed due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    }
+    
+    
+    return transferStatus;
+    
+}
+
+
+
+-(void)getlistOfimportedFilesAudioDetailsArray:(int) newDataUpdate
+{
+    Database *db=[Database shareddatabase];
+    NSString *dbPath=[db getDatabasePath];
+    sqlite3_stmt *statement,*statement1;
+    sqlite3* feedbackAndQueryTypesDB;
+    int departmentId;
+    AppPreferences* app=[AppPreferences sharedAppPreferences];
+
+    NSString *TransferStatus,*CurrentDuration,*transferDate,*deleteStatus,*dictationStatus,* recordItemName,*recordCreateDate,*Department;
+    NSMutableDictionary* dict=[[NSMutableDictionary alloc]init];
+    app.importedFilesAudioDetailsArray=[[NSMutableArray alloc]init];
+    NSString *query3=[NSString stringWithFormat:@"Select RecordItemName,RecordCreateDate,Department,TransferStatus,CurrentDuration,TransferDate,DeleteStatus,DictationStatus from CubeData Where NewDataUpdate=%d",newDataUpdate];
+    
+    if (sqlite3_open([dbPath UTF8String], &feedbackAndQueryTypesDB) == SQLITE_OK)// 1. Open The DataBase.
+    {
+        if (sqlite3_prepare_v2(feedbackAndQueryTypesDB, [query3 UTF8String], -1, &statement, NULL) == SQLITE_OK)// 2. Prepare the query
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                
+                // [app.feedOrQueryDetailMessageArray addObject:[NSString stringWithUTF8String:message]];
+                recordItemName=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement, 0)];
+                recordCreateDate=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement, 1)];
+
+                departmentId=sqlite3_column_int(statement, 2);
+                TransferStatus=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement, 3)];
+                CurrentDuration=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement, 4)];
+                transferDate=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement, 5)];
+                deleteStatus=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement, 6)];
+                dictationStatus=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement, 7)];
+                
+                
+                
+                NSString *query4=[NSString stringWithFormat:@"Select DepartMentName from DepartMentList Where Id=%d",departmentId];
+                
+                if (sqlite3_prepare_v2(feedbackAndQueryTypesDB, [query4 UTF8String], -1, &statement1, NULL) == SQLITE_OK)// 2. Prepare the query
+                {
+                    while (sqlite3_step(statement1) == SQLITE_ROW)
+                    {
+                        Department=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement1, 0)];
+                    }
+                }
+                else
+                {
+                    // NSLog(@"Can't preapre query due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+                }
+                
+                if (sqlite3_finalize(statement1) == SQLITE_OK)
+                {
+                    //NSLog(@"statement1 is finalized");
+                }
+                else
+                {}
+                //NSLog(@"Can't finalize due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+                
+                
+                
+                
+                NSString *query5=[NSString stringWithFormat:@"Select TransferStatus from TransferStatus Where Id='%@'",TransferStatus];
+                
+                if (sqlite3_prepare_v2(feedbackAndQueryTypesDB, [query5 UTF8String], -1, &statement1, NULL) == SQLITE_OK)// 2. Prepare the query
+                {
+                    while (sqlite3_step(statement1) == SQLITE_ROW)
+                    {
+                        TransferStatus=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement1, 0)];
+                    }
+                }
+                else
+                {
+                    //                    NSLog(@"Can't preapre query due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+                }
+                
+                if (sqlite3_finalize(statement1) == SQLITE_OK)
+                {
+                    //                    NSLog(@"statement1 is finalized");
+                }
+                else
+                    //                    NSLog(@"Can't finalize due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+                {}
+                
+                
+                NSString *query6=[NSString stringWithFormat:@"Select DeleteStatus from DeleteStatus Where Id='%@'",deleteStatus];
+                
+                if (sqlite3_prepare_v2(feedbackAndQueryTypesDB, [query6 UTF8String], -1, &statement1, NULL) == SQLITE_OK)// 2. Prepare the query
+                {
+                    while (sqlite3_step(statement1) == SQLITE_ROW)
+                    {
+                        deleteStatus=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement1, 0)];
+                    }
+                }
+                else
+                {
+                    //                    NSLog(@"Can't preapre query due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+                }
+                
+                if (sqlite3_finalize(statement1) == SQLITE_OK)
+                {
+                    //                    NSLog(@"statement1 is finalized");
+                }
+                else
+                    //                    NSLog(@"Can't finalize due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+                {}
+                
+                
+                NSString *query7=[NSString stringWithFormat:@"Select RecordingStatus from DictationStatus Where Id='%@'",dictationStatus];
+                
+                if (sqlite3_prepare_v2(feedbackAndQueryTypesDB, [query7 UTF8String], -1, &statement1, NULL) == SQLITE_OK)// 2. Prepare the query
+                {
+                    while (sqlite3_step(statement1) == SQLITE_ROW)
+                    {
+                        dictationStatus=[NSString stringWithUTF8String:(const char*)sqlite3_column_text(statement1, 0)];
+                    }
+                }
+                else
+                {
+                    //                    NSLog(@"Can't preapre query due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+                }
+                
+                if (sqlite3_finalize(statement1) == SQLITE_OK)
+                {
+                    // NSLog(@"statement1 is finalized");
+                }
+                else
+                    //NSLog(@"Can't finalize due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+                {}
+                dict=[NSMutableDictionary dictionaryWithObjectsAndKeys:recordItemName,@"RecordItemName",recordCreateDate,@"RecordCreatedDate",Department,@"Department",TransferStatus,@"TransferStatus",CurrentDuration,@"CurrentDuration",transferDate,@"TransferDate",deleteStatus,@"DeleteStatus",dictationStatus,@"DictationStatus",nil];
+                [app.importedFilesAudioDetailsArray addObject:dict];
+
+            }
+        }
+        else
+        {
+            //NSLog(@"Can't preapre query due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+        }
+    }
+    else
+    {
+        //NSLog(@"can't open db due error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    }
+    
+    if (sqlite3_finalize(statement) == SQLITE_OK)
+    {
+        //NSLog(@"statement is finalized");
+    }
+    else
+        // NSLog(@"Can't finalize due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    {
+    }
+    
+    if (sqlite3_close(feedbackAndQueryTypesDB) == SQLITE_OK)
+    {
+        // NSLog(@"db is closed");
+    }
+    else
+    {
+        //NSLog(@"Db is not closed due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    }
+    
+    //sorting for latest date message on top
+    NSDictionary*  headerObj1=[[NSDictionary alloc]init];
+    NSDictionary*  headerObj2=[[NSDictionary alloc]init];
+    NSDictionary*  temp=[[NSDictionary alloc]init];
+    NSComparisonResult result;
+    
+    for (int i=0; i<app.importedFilesAudioDetailsArray.count; i++)
+    {
+        for (int j=1; j<app.importedFilesAudioDetailsArray.count-i; j++)
+        {
+            headerObj1= [app.importedFilesAudioDetailsArray objectAtIndex:j-1];
+            headerObj2=  [app.importedFilesAudioDetailsArray objectAtIndex:j];
+            result=[[headerObj1 valueForKey:@"RecordCreatedDate" ] compare:[headerObj2 valueForKey:@"RecordCreatedDate" ]];
+            if (result==NSOrderedAscending)
+            {
+                temp=[app.importedFilesAudioDetailsArray objectAtIndex:j-1];
+                [app.importedFilesAudioDetailsArray replaceObjectAtIndex:j-1 withObject:[app.importedFilesAudioDetailsArray objectAtIndex:j]];
+                [app.importedFilesAudioDetailsArray replaceObjectAtIndex:j withObject:temp];
+                
+            }
+        }
+    }
+
+    
+    
+}
+
 @end

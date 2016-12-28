@@ -50,32 +50,10 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 
 -(void)deleteRecordin
 {
-   // bool deleted=  [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,self.existingAudioFileName]] error:&error];
-////    bool deleted1=  [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,recordedAudioFileName]] error:&error];
-//
+
     bsackUpAudioFileName=existingAudioFileName;
    [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@backup.wav",AUDIO_FILES_FOLDER_NAME,bsackUpAudioFileName]];
-    //bool moved=  [[NSFileManager defaultManager] moveItemAtPath:destpath1 toPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,self.existingAudioFileName]] error:&error];
-    
-    
-//    NSArray* pathComponents = [NSArray arrayWithObjects:
-//                               [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
-//                               AUDIO_FILES_FOLDER_NAME,
-//                               [NSString stringWithFormat:@"%@.wav",existingAudioFileName],
-//                               nil];
-//    
-//    NSURL* existingUrl = [NSURL fileURLWithPathComponents:pathComponents];
-//    
-//    NSArray* pathComponents1 = [NSArray arrayWithObjects:
-//                                [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
-//                                AUDIO_FILES_FOLDER_NAME,
-//                                [NSString stringWithFormat:@"%@backup.wav",bsackUpAudioFileName],
-//                                nil];
-//    
-//    NSURL* backupUrl = [NSURL fileURLWithPathComponents:pathComponents1];
-//    bool moved4=  [[NSFileManager defaultManager] copyItemAtURL:backupUrl toURL:existingUrl error:&error];
-
-}
+ }
 
 -(void)pauseRecordingFromBackGround
 {
@@ -157,8 +135,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     {
     i=0;
    
-//       timerMinutes= self.audioDuration/60;
-//        timerSeconds=self.audioDuration%60;
+
         audioDurationLAbel=[[UILabel alloc]init];
         audioDurationLAbel.text=self.audioDuration;
     NSArray* audioMinutesAndSecondsArray= [self.audioDuration componentsSeparatedByString:@":"];
@@ -184,8 +161,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     UIImageView* counterLabel= [startRecordingView viewWithTag:503];
     [counterLabel setHidden:NO];
     
-//    self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"More"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserSettings:)];
-   // self.navigationItem.title=@"Record";
+
     
     UILabel* fileNameLabel= [self.view viewWithTag:101];
     fileNameLabel.text=[NSString stringWithFormat:@"%@",existingAudioFileName];
@@ -204,16 +180,14 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 
     UILabel* recordingStatusLabel= [self.view viewWithTag:99];
 
-    //UIImageView* animatedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(recordingStatusLabel.frame.origin.x-10, recordingStatusLabel.frame.origin.y+recordingStatusLabel.frame.size.height+10., recordingStatusLabel.frame.size.width+20, 30)];
+    
     UIImageView* animatedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x+30, recordingStatusLabel.frame.origin.y+recordingStatusLabel.frame.size.height+self.view.frame.size.height*0.08, self.view.frame.size.width-60, 30)];
     animatedImageView.animationImages = [NSArray arrayWithObjects:
                                          [UIImage imageNamed:@"SoundWave-1"],
                                          [UIImage imageNamed:@"SoundWave-2"],
                                          [UIImage imageNamed:@"SoundWave-3"],
                                          nil];
-    //animatedImageView.image= [UIImage animatedImageNamed:@"SoundWave-" duration:1.0f];
-    //[UIImage animatedImageNamed:@"SoundWave-" duration:1.0f];
-    
+       
     animatedImageView.animationDuration = 1.0f;
     animatedImageView.animationRepeatCount = 0;
     animatedImageView.image=[UIImage imageNamed:@"SoundWave-3"];
@@ -232,16 +206,8 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     minutesValue= [[minutesAndValueArray objectAtIndex:0]intValue];
 
     [UIApplication sharedApplication].idleTimerDisabled = NO;
-//    NSError* error1;
-//    bsackUpAudioFileName=existingAudioFileName;
-//
-//    bool deleted=  [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@backup.wav",AUDIO_FILES_FOLDER_NAME,bsackUpAudioFileName]] error:&error1];
-// NSString* backUpPath=[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@backup.wav",AUDIO_FILES_FOLDER_NAME,bsackUpAudioFileName]];
-//
-//    
-//bool moved4=  [[NSFileManager defaultManager] copyItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,self.existingAudioFileName]] toPath:backUpPath error:&error1];
-    //
-    NSData *data1 = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
+
+        NSData *data1 = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
     
     [[NSUserDefaults standardUserDefaults] setObject:data1 forKey:SELECTED_DEPARTMENT_NAME_COPY];
         
@@ -437,11 +403,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     }
     audioDurationLAbel.text = [NSString stringWithFormat:@"%02d:%02d",timerMinutes,timerSeconds];
     
-//    if(![self.view viewWithTag:701].hidden)
-//    {
-//        [[self.view viewWithTag:701] setHidden:YES];
-//        [[self.view viewWithTag:702] setHidden:YES];
-//    }
+
     if(![self.view viewWithTag:701].hidden && recorder.isRecording)
     {
         [[self.view viewWithTag:701] setHidden:YES];
@@ -540,9 +502,6 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     [startRecordingImageView setFrame:CGRectMake((startRecordingView.frame.size.width/2)-9, (startRecordingView.frame.size.height/2)-9, 18, 18)];
     startRecordingImageView.image=[UIImage imageNamed:@"Play"];
     
-//    UIImageView* animatedImageView= [self.view viewWithTag:1001];
-//    [animatedImageView stopAnimating];
-//    animatedImageView.image=[UIImage imageNamed:@"SoundWave-3"];
     
 
     [self stopRecording];
@@ -550,11 +509,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     
     if (!recordingPauseAndExit)
     {
-//        hud.minSize = CGSizeMake(150.f, 100.f);
-//        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//        hud.mode = MBProgressHUDModeIndeterminate;
-//        hud.label.text = @"Saving audio..";
-//        hud.detailsLabel.text = @"Please wait";
+
         [self performSelector:@selector(composeAudio) withObject:nil afterDelay:0.0];
 
         //[self composeAudio];
@@ -562,11 +517,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     }
     else
     {
-//        hud1.minSize = CGSizeMake(150.f, 100.f);
-//        hud1 = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//        hud1.mode = MBProgressHUDModeIndeterminate;
-//        hud1.label.text = @"Saving audio..";
-//        hud1.detailsLabel.text = @"Please wait";
+
         [self performSelector:@selector(setCompressAudio) withObject:nil afterDelay:0.0];
 
        // [self setCompressAudio];
@@ -771,24 +722,14 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     
     if (!recordingPauseAndExit)
     {
-//        hud.minSize = CGSizeMake(150.f, 100.f);
-//        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//        hud.mode = MBProgressHUDModeIndeterminate;
-//        hud.label.text = @"Saving audio..";
-//        hud.detailsLabel.text = @"Please wait";
+
         [self performSelector:@selector(composeAudio) withObject:nil afterDelay:0.0];
-       // [self performSelectorOnMainThread:@selector(composeAudio) withObject:nil waitUntilDone:YES];
-        //[self composeAudio];
+       
     }
     else
     {
-//        hud1.minSize = CGSizeMake(150.f, 100.f);
-//        hud1 = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//        hud1.mode = MBProgressHUDModeIndeterminate;
-//        hud1.label.text = @"Saving audio..";
-//        hud1.detailsLabel.text = @"Please wait";
+
         [self performSelector:@selector(setCompressAudio) withObject:nil afterDelay:0.0];
-       // [self setCompressAudio];
 
     }
     
@@ -884,10 +825,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     int minutes=currentTime/60;
     int seconds=currentTime%60;
 
-//    currentDuration=[[UILabel alloc]initWithFrame:CGRectMake(animatedView.frame.size.width*0.15, animatedView.frame.size.height*0.1, 100, 20)];
-//    totalDuration=[[UILabel alloc]initWithFrame:CGRectMake(animatedView.frame.size.width*0.15+audioRecordSlider.frame.size.width-10, animatedView.frame.size.height*0.1, 100, 20)];
-//    currentDuration=[[UILabel alloc]initWithFrame:CGRectMake(audioRecordSlider.frame.origin.x-40, animatedView.frame.size.height*0.1, 80, 20)];
-//    totalDuration=[[UILabel alloc]initWithFrame:CGRectMake(audioRecordSlider.frame.origin.x+audioRecordSlider.frame.size.width-40, animatedView.frame.size.height*0.1, 80, 20)];
+
     currentDuration=[[UILabel alloc]initWithFrame:CGRectMake(uploadAudioButton.frame.origin.x, animatedView.frame.size.height*0.1, 80, 20)];
     totalDuration=[[UILabel alloc]initWithFrame:CGRectMake(uploadAudioButton.frame.origin.x+uploadAudioButton.frame.size.width-80, animatedView.frame.size.height*0.1, 80, 20)];
     currentDuration.textAlignment=NSTextAlignmentLeft;
@@ -1020,12 +958,16 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     else
     if (recordingPauseAndExit)
     {
+        NSError* error1;
+         [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@copy.wav",AUDIO_FILES_FOLDER_NAME,self.recordedAudioFileName]] error:&error1];
                 [self performSelector:@selector(disMis) withObject:nil afterDelay:0.5];
 
         //[self saveAudioRecordToDatabase];
     }
     else
     {
+        NSError* error1;
+        [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@copy.wav",AUDIO_FILES_FOLDER_NAME,self.recordedAudioFileName]] error:&error1];
         [self disMis];
     }
 }
@@ -1082,7 +1024,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                           //Database* db=  [Database shareddatabase];
                             [db updateAudioFileStatus:@"RecordingFileUpload" fileName:self.existingAudioFileName];
-                            [app uploadFileToServer:self.existingAudioFileName];
+                                                        [app uploadFileToServer:self.existingAudioFileName];
                             sender.userInteractionEnabled=NO;
                             deleteButton.userInteractionEnabled=NO;
                            // [[NSUserDefaults standardUserDefaults] setValue:@"yes" forKey:@"dismiss"];
@@ -1335,12 +1277,7 @@ else
 
 -(void)stopRecording
 {
-//    hud.minSize = CGSizeMake(150.f, 100.f);
-//    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    hud.mode = MBProgressHUDModeIndeterminate;
-//    hud.label.text = @"Saving audio..";
-//    hud.detailsLabel.text = @"Please wait";
-   // [self performSelectorOnMainThread:@selector(showHud) withObject:nil waitUntilDone:NO];
+
     [audioDurationLAbel removeFromSuperview];
     [recorder stop];
     app=[APIManager sharedManager];
@@ -1708,10 +1645,8 @@ else
     //    NSData *data1 = [NSKeyedArchiver archivedDataWithRootObject:deptObj];
     NSData *data1 = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
     DepartMent *deptObj = [NSKeyedUnarchiver unarchiveObjectWithData:data1];
-    NSLog(@"%ld",deptObj.Id);
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME_COPY];
     DepartMent *deptObj1 = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    NSLog(@"%ld",deptObj1.Id);
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:SELECTED_DEPARTMENT_NAME];
     [popupView removeFromSuperview];
 }

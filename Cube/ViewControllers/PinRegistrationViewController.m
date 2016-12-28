@@ -105,6 +105,28 @@
     
     if ([pin isEqualToString:confirmPin])
     {
+        if ([pinCode1TextField.text isEqualToString:@""] || [pinCode2TextField.text isEqualToString:@""] || [pinCode3TextField.text isEqualToString:@""] || [pinCode4TextField.text isEqualToString:@""])
+        {
+            title=@"Incomplete PIN!";
+            message=@"Please enter PIN code properly";
+            alertController = [UIAlertController alertControllerWithTitle:title
+                                                                  message:message
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+            actionOk = [UIAlertAction actionWithTitle:@"Ok"
+                                                style:UIAlertActionStyleDefault
+                                              handler:^(UIAlertAction * action)
+                        {
+                            pinCode5TextField.text=@"";
+                            pinCode6TextField.text=@"";
+                            pinCode7TextField.text=@"";
+                            pinCode8TextField.text=@"";
+                            [pinCode5TextField becomeFirstResponder];
+                        }]; //You can use a block here to handle a press on this button
+            [alertController addAction:actionOk];
+            [self presentViewController:alertController animated:YES completion:nil];
+        }
+        else
+        {
         hud.minSize = CGSizeMake(150.f, 100.f);
         hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
@@ -112,12 +134,13 @@
 
         [pinCode8TextField resignFirstResponder];
         [[APIManager sharedManager] acceptPinMacID:macId Pin:pin];
+        }
     }
     else
     {
         
         title=@"Pin confirmation failed";
-        message=@"Please cofirm pin ";
+        message=@"Please cofirm PIN ";
         alertController = [UIAlertController alertControllerWithTitle:title
                                                               message:message
                                                        preferredStyle:UIAlertControllerStyleAlert];
@@ -258,6 +281,11 @@
         if (sender==pinCode7TextField)
         {
             [pinCode8TextField becomeFirstResponder];
+            
+        }
+        if (sender==pinCode8TextField)
+        {
+            [pinCode8TextField resignFirstResponder];
             
         }
     }

@@ -62,7 +62,6 @@ extern void ThreadStateEndInterruption();
 
 
    // [[NSUserDefaults standardUserDefaults] setValue:@"MOB" forKey:RECORD_ABBREVIATION];
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
 
     ThreadStateInitalize();
     

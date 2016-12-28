@@ -72,4 +72,8 @@
 
 -(void)updateDepartment:(long)deptId fileName:(NSString*)fileName;
 
+-(int)getImportedFileCount;
+
+-(void)getlistOfimportedFilesAudioDetailsArray:(int) newDataUpdate;
+
 @end
