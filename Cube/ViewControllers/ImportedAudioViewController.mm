@@ -7,6 +7,7 @@
 //
 
 #import "ImportedAudioViewController.h"
+#import "AudioDetailsViewController.h"
 extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSType outputFormat, Float64 outputSampleRate);
 
 @interface ImportedAudioViewController ()
@@ -15,14 +16,25 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 
 @implementation ImportedAudioViewController
 
-@synthesize player;
+@synthesize player,audioFilePath;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.navigationItem.title=@"Imported Files";
     self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"Back"] style:UIBarButtonItemStylePlain target:self action:@selector(popViewController:)];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(validateFileUploadResponse:) name:NOTIFICATION_FILE_UPLOAD_API
+                                               object:nil];
     // Do any additional setup after loading the view.
+}
+
+-(void)validateFileUploadResponse:(NSNotification*)obj
+{
+    [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];
+
+    [self.tableView reloadData];
 }
 -(void)popViewController:(id)sender
 {
@@ -33,6 +45,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 {
     NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
     
+    NSArray* arr=[sharedDefaults objectForKey:@"array"];
    // NSString* sharedAudioFolderPathString=[sharedDefaults objectForKey:@"audioFolderPath"];
     
     NSMutableArray* sharedAudioNamesArray=[NSMutableArray new];
@@ -46,11 +59,14 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         //long unInsertedFileCount=sharedAudioNamesArray.count-insertedFileCount;
         
         [self saveAudioRecordToDatabase:insertedFileCount];
+        [self setCompressAudio:insertedFileCount];
+
     }
     
     [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];
     
-    [self setCompressAudio];
+    [self.tableView reloadData];
+    
     
 }
 - (IBAction)backButtonPressed:(id)sender
@@ -80,7 +96,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         
         //audioFilePathString=[audioFilePathString stringByDeletingPathExtension];
         
-        // audioFilePathString=[audioFilePathString stringByAppendingPathExtension:@"wav"];
+        audioFilePathString=[audioFilePathString stringByAppendingPathExtension:@"wav"];
         NSURL* newurl=[NSURL URLWithString:audioFolderPath];
         
         NSString* audioFilePath=[newurl.path stringByAppendingPathComponent:audioFilePathString];
@@ -280,26 +296,26 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 //    
 //}
 
--(void)setCompressAudio
+-(void)setCompressAudio:(int)insertedFileCount
 {
-    
+    NSMutableArray* audioNamesArray=[NSMutableArray new];
     NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
+
+    audioNamesArray=[sharedDefaults objectForKey:@"audioNamesArray"];
+    for (long i=0+insertedFileCount; i<audioNamesArray.count; i++)
+    {
     
     NSString* audioFolderPath=[sharedDefaults objectForKey:@"audioFolderPath"];
-    
-    NSMutableArray* audioNamesArray=[NSMutableArray new];
-    
-    audioNamesArray=[sharedDefaults objectForKey:@"audioNamesArray"];
-    
+        
     NSLog(@"%d",[sharedDefaults boolForKey:@"is"]);
     
-    NSString* audioFileNameString=[audioNamesArray objectAtIndex:0];
+    NSString* audioFileNameString=[audioNamesArray objectAtIndex:i];
     
     NSString* audioFileNameForDestination= [NSString stringWithFormat:@"Copied%@",audioFileNameString];
 
     NSURL* newurl=[NSURL URLWithString:audioFolderPath];
     
-    NSString* audioFilePath=[newurl.path stringByAppendingPathComponent:audioFileNameString];
+    audioFilePath=[newurl.path stringByAppendingPathComponent:audioFileNameString];
     
     NSString* audioFilePathForDestination=[newurl.path stringByAppendingPathComponent:audioFileNameForDestination];
     
@@ -321,7 +337,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     
    
      [self convertAudio];
-    
+    }
 }
 - (bool)convertAudio
 {
@@ -349,13 +365,19 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     else
     {
         NSLog(@"Converted");
+        
+        NSString* folderPath=[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:[NSString stringWithFormat:AUDIO_FILES_FOLDER_NAME]];
+        NSError* error;
+        if (![[NSFileManager defaultManager] fileExistsAtPath:folderPath])
+            [[NSFileManager defaultManager] createDirectoryAtPath:folderPath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
+        NSString* homeDirectoryFileName=[audioFilePath lastPathComponent];//store on same name as shared file name
+
           // [[NSFileManager defaultManager] moveItemAtPath:destinationFilePath toPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,@"compressed"]] error:&error1];
-                if ([[NSFileManager defaultManager] fileExistsAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,@"compressed"]]]) {
-                    [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,@"compressed"]] error:nil];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,homeDirectoryFileName]]]) {
+                    [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,homeDirectoryFileName]] error:nil];
                 }
 
-        
-        [[NSFileManager defaultManager] copyItemAtPath:destinationFilePath toPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,@"compressed"]] error:&error1];
+     bool copied=   [[NSFileManager defaultManager] copyItemAtPath:destinationFilePath toPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,homeDirectoryFileName]] error:&error1];
 //        [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@copy.wav",AUDIO_FILES_FOLDER_NAME,self.recordedAudioFileName]] error:&error1];
 //        NSArray* pathComponents = [NSArray arrayWithObjects:
 //                                   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
@@ -520,32 +542,83 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     UITableViewCell *cell = [tableview dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
     UILabel* departmentNameLabel=[cell viewWithTag:101];
-    departmentNameLabel.text=[awaitingFileTransferDict valueForKey:@"RecordItemName"];
+    departmentNameLabel.text=[[awaitingFileTransferDict valueForKey:@"RecordItemName"] stringByDeletingPathExtension];
     NSString* dateAndTimeString=[awaitingFileTransferDict valueForKey:@"RecordCreatedDate"];
     NSArray* dateAndTimeArray=[dateAndTimeString componentsSeparatedByString:@" "];
     
-    UILabel* timeLabel=[cell viewWithTag:102];
-    timeLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:1]];
+    UILabel* recordingDurationLabel=[cell viewWithTag:102];
+    int audioMinutes= [[awaitingFileTransferDict valueForKey:@"CurrentDuration"] intValue]/60;
+    int audioSeconds= [[awaitingFileTransferDict valueForKey:@"CurrentDuration"] intValue]%60;
+    
+    recordingDurationLabel.text=[NSString stringWithFormat:@"%02d:%02d",audioMinutes,audioSeconds];
     
     UILabel* nameLabel=[cell viewWithTag:103];
     nameLabel.text=[awaitingFileTransferDict valueForKey:@"Department"];
     
-    UILabel* deleteStatusLabel=[cell viewWithTag:105];
+    UILabel* statusLabel=[cell viewWithTag:106];
+    if ([[awaitingFileTransferDict valueForKey:@"TransferStatus"] isEqualToString:@"Transferred"] && !([[awaitingFileTransferDict valueForKey:@"DictationStatus"] isEqualToString:@"RecordingFileUpload"]))
+    {
+        statusLabel.textColor=[UIColor colorWithRed:49/255.0 green:85/255.0 blue:25/255.0 alpha:1.0];
+    }
+    else
+    {
+        statusLabel.textColor=[UIColor colorWithRed:250/255.0 green:162/255.0 blue:27/255.0 alpha:1.0];
+
+    }
+    
+    if ([[awaitingFileTransferDict valueForKey:@"DictationStatus"] isEqualToString:@"RecordingFileUpload"])
+        
+    {
+        statusLabel.text=@"Uploading";
+
+    }
+    else
+    statusLabel.text=[awaitingFileTransferDict valueForKey:@"TransferStatus"];
     
     UILabel* dateLabel=[cell viewWithTag:104];
     dateLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:0]];
     
+    UILabel* timeLabel=[cell viewWithTag:105];
+    timeLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:1]];
+
     
     return cell;
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableview didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //NSDictionary* awaitingFileTransferDict;
-    UITableViewCell* cell=[tableView cellForRowAtIndexPath:indexPath];
+   UITableViewCell* cell= [tableview cellForRowAtIndexPath:indexPath];
+    
+    UILabel* deleteStatusLabel=[cell viewWithTag:106];
+    
+    if(([deleteStatusLabel.text isEqual:@"Uploading"]))
+    {
+        alertController = [UIAlertController alertControllerWithTitle:@"Alert?"
+                                                              message:@"File is in use!"
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+        actionDelete = [UIAlertAction actionWithTitle:@"Ok"
+                                                style:UIAlertActionStyleDefault
+                                              handler:^(UIAlertAction * action)
+                        {
+                            [alertController dismissViewControllerAnimated:YES completion:nil];
+                        }]; //You can use a block here to handle a press on this button
+        [alertController addAction:actionDelete];
+        
+        
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+        
+    }
+
+    else
+    {
     APIManager* app=[APIManager sharedManager];
     
-    [self.navigationController presentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"AudioDetailsViewController"] animated:YES completion:nil];
-    
+    AudioDetailsViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioDetailsViewController"];
+    vc.selectedView=@"Imported";
+    vc.selectedRow=indexPath.row;
+    [self presentViewController:vc animated:YES completion:nil];
+    }
         
 }
 

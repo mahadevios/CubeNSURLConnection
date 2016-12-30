@@ -20,9 +20,14 @@
     OSType   outputFormat;
     
     Float64  sampleRate;
+    UIAlertController *alertController;
+    UIAlertAction *actionDelete;
+    UIAlertAction *actionCancel;
 }
 
 @property(nonatomic,strong)AVAudioPlayer* player;
+@property(nonatomic,strong)NSString* audioFilePath;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)playAudioButtonClicked:(id)sender;
 - (IBAction)backButtonPressed:(id)sender;
 

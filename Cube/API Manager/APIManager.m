@@ -567,10 +567,13 @@ static APIManager *singleton = nil;
             NSString* date= [[APIManager sharedManager] getDateAndTimeString];
             Database* db=[Database shareddatabase];
             [db updateAudioFileUploadedStatus:@"Transferred" fileName:str dateAndTime:date mobiledictationidval:[idvalString longLongValue]];
+            [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUploaded" fileName:str];
+
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
            // NSLog(@"%@",[NSString stringWithFormat:@"%@ uploaded successfully",str]);
+
             [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"%@ uploaded successfully",str] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
           
             

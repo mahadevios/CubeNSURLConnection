@@ -215,7 +215,7 @@ static Database *db;
     return obj;
 }
 
--(int)getCountOfTransfersOfDicatationStatus:(NSString*)status
+-(int)getCountOfTransfersOfDicatationStatus:(NSString*)status//for failed transfer might be
 {
     Database *db=[Database shareddatabase];
     NSString *dbPath=[db getDatabasePath];
@@ -414,7 +414,7 @@ static Database *db;
 
     }
     else
-   // query3=[NSString stringWithFormat:@"Select RecordItemName,RecordCreateDate,Department,TransferStatus,CurrentDuration from CubeData Where DictationStatus=(Select Id from DictationStatus Where RecordingStatus='%@' or RecordingStatus='%@') and TransferStatus=%d",status,@"RecordingFileUpload",0];
+
         if ([status isEqualToString:@"RecordingComplete"])
         {
 

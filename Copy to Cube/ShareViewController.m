@@ -72,6 +72,7 @@ SLComposeSheetConfigurationItem *item;
     NSString *typeIdentifier = (NSString *)kUTTypeAudio;
     NSExtensionItem *item = self.extensionContext.inputItems.firstObject;
     NSItemProvider *itemProvider = item.attachments.firstObject;
+ 
     if ([itemProvider hasItemConformingToTypeIdentifier:typeIdentifier]) {
         [itemProvider loadItemForTypeIdentifier:typeIdentifier
                                         options:nil
@@ -291,7 +292,7 @@ SLComposeSheetConfigurationItem *item;
     
     NSString* audioFilePath=[sharedAudioFilePathString stringByDeletingPathExtension];
     
-    audioFilePath=[audioFilePath stringByAppendingPathExtension:@"wav"];
+   // audioFilePath=[audioFilePath stringByAppendingPathExtension:@"wav"];
     
     NSString* waveFileName=[audioFilePath lastPathComponent];
     
@@ -537,6 +538,10 @@ SLComposeSheetConfigurationItem *item;
     NSString *typeIdentifier = (NSString *)kUTTypeAudio;
     NSExtensionItem *item = self.extensionContext.inputItems.firstObject;
     NSItemProvider *itemProvider = item.attachments.firstObject;
+    NSArray* arr= itemProvider.registeredTypeIdentifiers;
+    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.coreFlexSolutions.CubeDictate"];
+
+    [sharedDefaults setObject:arr forKey:@"array"];
     if ([itemProvider hasItemConformingToTypeIdentifier:typeIdentifier]) {
         [itemProvider loadItemForTypeIdentifier:typeIdentifier
                                         options:nil
@@ -570,7 +575,7 @@ SLComposeSheetConfigurationItem *item;
                      
                      audioFileName=[audioFileName stringByDeletingPathExtension];
                      
-                     audioFileName=[audioFileName stringByAppendingPathExtension:@"wav"];
+                     //audioFileName=[audioFileName stringByAppendingPathExtension:@"wav"];
                      
                      if ([audioFileName isEqualToString:waveFileName])
                      {

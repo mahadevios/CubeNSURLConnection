@@ -80,10 +80,19 @@
         audiorecordDict= [app.failedTransferNamesArray objectAtIndex:self.selectedRow];
     }
     else
+        if ([self.selectedView isEqualToString:@"Imported"])
+
     {
         [transferDictationButton setTitle:@"Transfer" forState:UIControlStateNormal];
         audiorecordDict= [[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray objectAtIndex:self.selectedRow];
     }
+    if ([self.selectedView isEqualToString:@"Imported"])
+    {
+       //filenameLabel.text= [[audiorecordDict valueForKey:@"RecordItemName"] stringByDeletingPathExtension];
+        //filenameLabel.text=[audiorecordDict valueForKey:@"RecordItemName"];
+
+    }
+    else
     filenameLabel.text=[audiorecordDict valueForKey:@"RecordItemName"];
     dictatedOnLabel.text=[audiorecordDict valueForKey:@"RecordCreatedDate"];
     departmentLabel.text=[audiorecordDict valueForKey:@"Department"];
@@ -269,7 +278,19 @@
         UILabel* dateAndTimeLabel=[sliderPopUpView viewWithTag:225];
         dateAndTimeLabel.text=[audiorecordDict valueForKey:@"RecordCreatedDate"];
         pauseOrPlayImageView.image=[UIImage imageNamed:@"Pause"];
-    NSString* filName=[audiorecordDict valueForKey:@"RecordItemName"];
+    NSString* filName;
+        
+//        if ([self.selectedView isEqualToString:@"Imported"])
+//        {
+//            //filName= [[audiorecordDict valueForKey:@"RecordItemName"] stringByDeletingPathExtension];
+//            //filenameLabel.text=[audiorecordDict valueForKey:@"RecordItemName"];
+//            
+//        }
+//        else
+ //       {
+         filName=[audiorecordDict valueForKey:@"RecordItemName"];
+   //     }
+
     if (!IMPEDE_PLAYBACK)
     {
         [AudioSessionManager setAudioSessionCategory:AVAudioSessionCategoryPlayback];
@@ -485,7 +506,7 @@
      }
         
         else
-                //for incomplete and failed transfer please recheck
+            if ([self.selectedView isEqualToString:@"Transfer Failed"])                //for incomplete and failed transfer please recheck
             {
                 
                 alertController = [UIAlertController alertControllerWithTitle:TRANSFER_MESSAGE
@@ -530,6 +551,49 @@
                 
                 
             }
+        
+        else
+        {
+            alertController = [UIAlertController alertControllerWithTitle:TRANSFER_MESSAGE
+                                                                  message:@""
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+            actionDelete = [UIAlertAction actionWithTitle:@"Yes"
+                                                    style:UIAlertActionStyleDefault
+                                                  handler:^(UIAlertAction * action)
+                            {
+                                APIManager* app=[APIManager sharedManager];
+                                
+                                NSString* filName=[audiorecordDict valueForKey:@"RecordItemName"];
+                                [transferDictationButton setHidden:YES];
+                                [deleteDictationButton setHidden:YES];
+                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                    
+                                    [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUpload" fileName:filName];
+                                    if ([AppPreferences sharedAppPreferences].isReachable)
+                                    {
+                                        [AppPreferences sharedAppPreferences].fileUploading=YES;
+                                    }
+                                    [app uploadFileToServer:filName];
+                                    //[self dismissViewControllerAnimated:YES completion:nil];
+                                    
+                                    
+                                });
+                                
+                            }]; //You can use a block here to handle a press on this button
+            [alertController addAction:actionDelete];
+            
+            
+            actionCancel = [UIAlertAction actionWithTitle:@"No"
+                                                    style:UIAlertActionStyleCancel
+                                                  handler:^(UIAlertAction * action)
+                            {
+                                [alertController dismissViewControllerAnimated:YES completion:nil];
+                                
+                            }]; //You can use a block here to handle a press on this button
+            [alertController addAction:actionCancel];
+            
+
+        }
 
      [self presentViewController:alertController animated:YES completion:nil];
     
