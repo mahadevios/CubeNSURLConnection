@@ -58,6 +58,7 @@
     UILabel* dictatedOnLabel=[self.view viewWithTag:504];
     UILabel* transferStatusLabel=[self.view viewWithTag:505];
     UILabel* transferDateLabel=[self.view viewWithTag:506];
+    UILabel* dictatedHeadingLabel=[self.view viewWithTag:2000];
 
     // UILabel* transferDateLabel=[self.view viewWithTag:506];
     
@@ -88,12 +89,14 @@
     }
     if ([self.selectedView isEqualToString:@"Imported"])
     {
-       //filenameLabel.text= [[audiorecordDict valueForKey:@"RecordItemName"] stringByDeletingPathExtension];
+        filenameLabel.text= [[audiorecordDict valueForKey:@"RecordItemName"] stringByDeletingPathExtension];
         //filenameLabel.text=[audiorecordDict valueForKey:@"RecordItemName"];
-
+        dictatedHeadingLabel.text=@"Imported On";
     }
     else
-    filenameLabel.text=[audiorecordDict valueForKey:@"RecordItemName"];
+    {
+     filenameLabel.text=[audiorecordDict valueForKey:@"RecordItemName"];
+    }
     dictatedOnLabel.text=[audiorecordDict valueForKey:@"RecordCreatedDate"];
     departmentLabel.text=[audiorecordDict valueForKey:@"Department"];
     transferStatusLabel.text=[audiorecordDict valueForKey:@"TransferStatus"];
@@ -218,6 +221,65 @@
                     [db updateAudioFileStatus:@"RecordingDelete" fileName:fileName dateAndTime:dateAndTimeString];
                     [app deleteFile:[NSString stringWithFormat:@"%@backup",fileName]];
                     BOOL delete= [app deleteFile:fileName];
+                    
+                    if ([self.selectedView isEqualToString:@"Imported"])
+                    {
+                        NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
+                        
+                        // NSString* sharedAudioFolderPathString=[sharedDefaults objectForKey:@"audioFolderPath"];
+                        
+                        NSMutableArray* sharedAudioNamesArray=[NSMutableArray new];
+                        
+                        NSArray* copyArray=[NSArray new];
+                        
+                        copyArray=[sharedDefaults objectForKey:@"audioNamesArray"];
+                        
+                        sharedAudioNamesArray=[copyArray mutableCopy];
+                        
+                        NSMutableArray* forDeleteStatusProxyArray = [NSMutableArray new];
+                        
+                        for (int i=0; i<sharedAudioNamesArray.count; i++)
+                        {
+//                            NSString* fileNameWithoutExtension=[[sharedAudioNamesArray objectAtIndex:i] stringByDeletingPathExtension];
+//                            
+//                            [forDeleteStatusProxyArray addObject:fileNameWithoutExtension];
+//                            
+//                            NSString* pathExtension= [[sharedAudioNamesArray objectAtIndex:i] pathExtension];
+//                            
+//                            if ([forDeleteStatusProxyArray containsObject:fileName])
+//                            {
+//                                NSString* fileNameWithExtension=[NSString stringWithFormat:@"%@.%@",fileName,pathExtension];
+//                                
+//                                [sharedAudioNamesArray removeObject:fileNameWithExtension];
+//                            }
+                            
+                            NSString* fileNameWithoutExtension=[[sharedAudioNamesArray objectAtIndex:i] stringByDeletingPathExtension];
+
+                            NSString* pathExtension= [[sharedAudioNamesArray objectAtIndex:i] pathExtension];
+                            
+                            NSString* fileNameWithExtension=[NSString stringWithFormat:@"%@.%@",fileName,pathExtension];
+//
+                            if ([sharedAudioNamesArray containsObject:fileNameWithExtension])
+                            {
+                                [sharedAudioNamesArray removeObject:fileNameWithExtension];
+                                
+                                break;
+
+                            }
+                            
+                        }
+                        
+                       
+                        
+//                        if ([sharedAudioNamesArray containsObject:fileName])
+//                        {
+//                            [sharedAudioNamesArray removeObject:fileName];
+//                        }
+                        
+                        [sharedDefaults setObject:sharedAudioNamesArray forKey:@"audioNamesArray"];
+                        
+                        [sharedDefaults synchronize];
+                    }
                     if (delete)
                     {
                         [self dismissViewControllerAnimated:YES completion:nil];
@@ -564,11 +626,21 @@
                                 APIManager* app=[APIManager sharedManager];
                                 
                                 NSString* filName=[audiorecordDict valueForKey:@"RecordItemName"];
+                                NSString* date=[app getDateAndTimeString];
+
                                 [transferDictationButton setHidden:YES];
                                 [deleteDictationButton setHidden:YES];
                                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                     
                                     [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUpload" fileName:filName];
+                                    
+                                    NSString* transferStatus=[audiorecordDict valueForKey:@"TransferStatus"];
+                                    if ([transferStatus isEqualToString:@"Transferred"])
+                                    {
+                                        int mobileDictationIdVal=[[Database shareddatabase] getMobileDictationIdFromFileName:filName];
+                                        
+                                        [[Database shareddatabase] updateAudioFileUploadedStatus:@"Resend" fileName:filName dateAndTime:date mobiledictationidval:mobileDictationIdVal];
+                                    }
                                     if ([AppPreferences sharedAppPreferences].isReachable)
                                     {
                                         [AppPreferences sharedAppPreferences].fileUploading=YES;

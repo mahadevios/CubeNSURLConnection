@@ -11,17 +11,21 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface ShareViewController : SLComposeServiceViewController
+@interface ShareViewController : SLComposeServiceViewController<NSURLSessionDelegate,NSURLSessionDataDelegate>
 
 {
     NSDictionary* result;
     UIAlertController *alertController;
     UIAlertAction *actionDelete;
     UIAlertAction *actionCancel;
-    bool isFileAvailable;
-
+    //bool isFileAvailable;
+    NSURLSession *mySession;
+    NSURL *url;
+    NSString* fileNameForViewString;
+    UILabel* fileNameLabel;
+    
 }
 @property(nonatomic,strong)NSString* audioFilePathString;
 @property(nonatomic,strong)NSString* fileName;
-
+@property(nonatomic)BOOL isFileAvailable;
 @end

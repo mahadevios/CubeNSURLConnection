@@ -23,9 +23,9 @@
     UIAlertController *alertController;
     UIAlertAction *actionDelete;
     UIAlertAction *actionCancel;
+    AVAudioPlayer* player;
 }
 
-@property(nonatomic,strong)AVAudioPlayer* player;
 @property(nonatomic,strong)NSString* audioFilePath;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)playAudioButtonClicked:(id)sender;

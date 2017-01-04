@@ -16,7 +16,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 
 @implementation ImportedAudioViewController
 
-@synthesize player,audioFilePath;
+@synthesize audioFilePath;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -43,27 +43,45 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
     
-    NSArray* arr=[sharedDefaults objectForKey:@"array"];
-   // NSString* sharedAudioFolderPathString=[sharedDefaults objectForKey:@"audioFolderPath"];
-    
-    NSMutableArray* sharedAudioNamesArray=[NSMutableArray new];
-    
-    sharedAudioNamesArray=[sharedDefaults objectForKey:@"audioNamesArray"];
-    
-    int insertedFileCount = [[Database shareddatabase] getImportedFileCount];
-    
-    if (insertedFileCount<sharedAudioNamesArray.count)
-    {
-        //long unInsertedFileCount=sharedAudioNamesArray.count-insertedFileCount;
-        
-        [self saveAudioRecordToDatabase:insertedFileCount];
-        [self setCompressAudio:insertedFileCount];
-
-    }
+//    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
+//    
+//    NSLog(@"%@",[sharedDefaults objectForKey:@"output"]);
+//   // NSString* sharedAudioFolderPathString=[sharedDefaults objectForKey:@"audioFolderPath"];
+//    
+//    NSMutableArray* sharedAudioNamesArray=[NSMutableArray new];
+//    
+//    sharedAudioNamesArray=[sharedDefaults objectForKey:@"audioNamesArray"];
+//    
+//    int insertedFileCount = [[Database shareddatabase] getImportedFileCount];
+//    
+//    if (insertedFileCount<sharedAudioNamesArray.count)
+//    {
+//        //long unInsertedFileCount=sharedAudioNamesArray.count-insertedFileCount;
+//        
+//        [self setCompressAudio:insertedFileCount];
+//        [self saveAudioRecordToDatabase:insertedFileCount];
+//
+//
+//    }
+//    
+//    NSMutableDictionary* updatedFileDict=[sharedDefaults objectForKey:@"updatedFileDict"];
+//
+//    for (NSString* updatedFileNAme in [updatedFileDict allKeys])
+//    {
+//        NSString* updatedValue= [updatedFileDict objectForKey:updatedFileNAme];
+//
+//        if ([updatedValue isEqualToString:@"YES"])
+//        {
+//            NSLog(@"%@",updatedFileNAme);
+//            [[Database shareddatabase] updateAudioFileDeleteStatus:@"NoDelete" fileName:updatedFileNAme];
+//            [self setCompressAudioFileName:updatedFileNAme];
+//
+//        }
+//    }
     
     [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];
+    
     
     [self.tableView reloadData];
     
@@ -99,9 +117,9 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         audioFilePathString=[audioFilePathString stringByAppendingPathExtension:@"wav"];
         NSURL* newurl=[NSURL URLWithString:audioFolderPath];
         
-        NSString* audioFilePath=[newurl.path stringByAppendingPathComponent:audioFilePathString];
+        NSString* audioFilePath1=[newurl.path stringByAppendingPathComponent:audioFilePathString];
         
-        NSData* audioData=[NSData dataWithContentsOfFile:audioFilePath];
+        NSData* audioData=[NSData dataWithContentsOfFile:audioFilePath1];
         
         
         NSLog(@"%@",[sharedDefaults objectForKey:@"assetUrl"]);
@@ -113,9 +131,9 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
        
         [AudioSessionManager setAudioSessionCategory:AVAudioSessionCategoryPlayback];
        
-        self.player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
+        player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
         
-        [self.player play];
+        [player play];
         
        // bool playing=[self.player isPlaying];
         NSLog(@"%@", error.localizedDescription);
@@ -127,174 +145,6 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 }
 
 
-//-(void) convertToWav
-//{
-//    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
-//    
-//    NSString* sharedAudioFolderPathString=[sharedDefaults objectForKey:@"audioFolderPath"];
-//    
-//    NSMutableArray* sharedAudioNamesArray=[NSMutableArray new];
-//    
-//    sharedAudioNamesArray=[sharedDefaults objectForKey:@"audioNamesArray"];
-//    
-//    
-//    NSString* sharedAudioFileNameString=[sharedAudioNamesArray lastObject];
-//    
-//    NSURL* sharedAudioFolderPathUrl=[NSURL URLWithString:sharedAudioFolderPathString];
-//    
-//    
-//    NSString* sharedAudioFilePathString=[sharedAudioFolderPathUrl.path stringByAppendingPathComponent:sharedAudioFileNameString];
-//    
-//    
-//    NSData* sharedAudioFileData=[NSData dataWithContentsOfFile:sharedAudioFilePathString];
-//    
-//    NSString* homePathString=[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:[sharedAudioNamesArray lastObject]];
-//    
-//    NSError* err;
-//    
-//    
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:homePathString])
-//    {
-//        [[NSFileManager defaultManager] removeItemAtPath:homePathString error:&err];
-//    }
-//    BOOL write1= [sharedAudioFileData writeToFile:homePathString atomically:YES];
-//    
-//    //    NSArray* pathComponents = [NSArray arrayWithObjects:
-//    //                               NSHomeDirectory(),
-//    //                               @"Documents",
-//    //                               @"convertToWave.m4a",
-//    //                               nil];
-//    
-//    
-//    NSURL* newAssetUrl = [NSURL fileURLWithPath:homePathString];
-//    
-//    NSError *assetError = nil;
-//    
-//    AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:newAssetUrl options:nil];
-//    
-//    AVAssetReader *assetReader = [AVAssetReader assetReaderWithAsset:songAsset
-//                                                               error:&assetError]
-//    ;
-//    NSString* assetString=[NSString stringWithFormat:@"%@",assetError];
-//    
-//    [sharedDefaults setObject:assetString forKey:@"assetUrl"];
-//    if (assetError) {
-//        NSLog (@"error: %@", assetError);
-//        return;
-//    }
-//    
-//    AVAssetReaderOutput *assetReaderOutput = [AVAssetReaderAudioMixOutput
-//                                              assetReaderAudioMixOutputWithAudioTracks:songAsset.tracks
-//                                              audioSettings: nil];
-//    if (! [assetReader canAddOutput: assetReaderOutput]) {
-//        NSLog (@"can't add reader output... die!");
-//        return;
-//    }
-//    [assetReader addOutput: assetReaderOutput];
-//    
-//    
-//    if (assetError) {
-//        NSLog (@"error: %@", assetError);
-//        
-//        return;
-//    }
-//    
-//    NSString* audioFilePath=[homePathString stringByDeletingPathExtension];
-//    
-//    audioFilePath=[audioFilePath stringByAppendingPathExtension:@"wav"];
-//    
-//    NSString *wavFilePath = audioFilePath;
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:wavFilePath])
-//    {
-//        [[NSFileManager defaultManager] removeItemAtPath:wavFilePath error:nil];
-//    }
-//    NSURL *exportURL = [NSURL fileURLWithPath:wavFilePath];
-//    
-//    
-//    AVAssetWriter *assetWriter = [AVAssetWriter assetWriterWithURL:exportURL
-//                                                          fileType:AVFileTypeWAVE
-//                                                             error:&assetError];
-//    if (assetError)
-//    {
-//        NSLog (@"error: %@", assetError);
-//        return;
-//    }
-//    
-//    AudioChannelLayout channelLayout;
-//    memset(&channelLayout, 0, sizeof(AudioChannelLayout));
-//    channelLayout.mChannelLayoutTag = kAudioChannelLayoutTag_Stereo;
-//    NSDictionary *outputSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                    [NSNumber numberWithInt:kAudioFormatLinearPCM], AVFormatIDKey,
-//                                    [NSNumber numberWithFloat:8000.0], AVSampleRateKey,
-//                                    [NSNumber numberWithInt:2], AVNumberOfChannelsKey,
-//                                    [NSData dataWithBytes:&channelLayout length:sizeof(AudioChannelLayout)], AVChannelLayoutKey,
-//                                    [NSNumber numberWithInt:16], AVLinearPCMBitDepthKey,
-//                                    [NSNumber numberWithBool:NO], AVLinearPCMIsNonInterleaved,
-//                                    [NSNumber numberWithBool:NO],AVLinearPCMIsFloatKey,
-//                                    [NSNumber numberWithBool:NO], AVLinearPCMIsBigEndianKey,
-//                                    nil];
-//    AVAssetWriterInput *assetWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio
-//                                                                              outputSettings:outputSettings];
-//    if ([assetWriter canAddInput:assetWriterInput])
-//    {
-//        [assetWriter addInput:assetWriterInput];
-//    }
-//    else
-//    {
-//        NSLog (@"can't add asset writer input... die!");
-//        return;
-//    }
-//    
-//    assetWriterInput.expectsMediaDataInRealTime = NO;
-//    
-//    [assetWriter startWriting];
-//    [assetReader startReading];
-//    
-//    AVAssetTrack *soundTrack = [songAsset.tracks objectAtIndex:0];
-//    CMTime startTime = CMTimeMake (0, soundTrack.naturalTimeScale);
-//    [assetWriter startSessionAtSourceTime: startTime];
-//    
-//    __block UInt64 convertedByteCount = 0;
-//    dispatch_queue_t mediaInputQueue = dispatch_queue_create("mediaInputQueue", NULL);
-//    
-//    [assetWriterInput requestMediaDataWhenReadyOnQueue:mediaInputQueue
-//                                            usingBlock: ^
-//     {
-//         
-//         while (assetWriterInput.readyForMoreMediaData)
-//         {
-//             CMSampleBufferRef nextBuffer = [assetReaderOutput copyNextSampleBuffer];
-//             if (nextBuffer)
-//             {
-//                 // append buffer
-//                 [assetWriterInput appendSampleBuffer: nextBuffer];
-//                 convertedByteCount += CMSampleBufferGetTotalSampleSize (nextBuffer);
-//                 CMTime progressTime = CMSampleBufferGetPresentationTimeStamp(nextBuffer);
-//                 
-//                 CMTime sampleDuration = CMSampleBufferGetDuration(nextBuffer);
-//                 if (CMTIME_IS_NUMERIC(sampleDuration))
-//                     progressTime= CMTimeAdd(progressTime, sampleDuration);
-//                 float dProgress= CMTimeGetSeconds(progressTime) / CMTimeGetSeconds(songAsset.duration);
-//                 NSLog(@"%f",dProgress);
-//                 int pro=dProgress;
-//                 if (pro==1)
-//                 {
-//                     
-//                 }
-//             }
-//             else
-//             {
-//                 
-//                 [assetWriterInput markAsFinished];
-//                 //              [assetWriter finishWriting];
-//                 [assetReader cancelReading];
-//                 
-//             }
-//         }
-//     }];
-//    [sharedDefaults synchronize];
-//    
-//}
 
 -(void)setCompressAudio:(int)insertedFileCount
 {
@@ -317,6 +167,8 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     
     audioFilePath=[newurl.path stringByAppendingPathComponent:audioFileNameString];
     
+//        NSError* error12;
+//        bool copied=   [[NSFileManager defaultManager] copyItemAtPath:audioFilePath toPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/copied.wav",AUDIO_FILES_FOLDER_NAME]] error:&error12];
     NSString* audioFilePathForDestination=[newurl.path stringByAppendingPathComponent:audioFileNameForDestination];
     
     destinationFilePath= [NSString stringWithFormat:@"%@",audioFilePathForDestination];
@@ -339,6 +191,50 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
      [self convertAudio];
     }
 }
+
+-(void)setCompressAudioFileName:(NSString*)audioFileNameString
+{
+    NSMutableArray* audioNamesArray=[NSMutableArray new];
+    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
+    
+    audioNamesArray=[sharedDefaults objectForKey:@"audioNamesArray"];
+   
+        
+        NSString* audioFolderPath=[sharedDefaults objectForKey:@"audioFolderPath"];
+        
+        NSLog(@"%d",[sharedDefaults boolForKey:@"is"]);
+    
+        NSString* audioFileNameForDestination= [NSString stringWithFormat:@"Copied%@",audioFileNameString];
+        
+        NSURL* newurl=[NSURL URLWithString:audioFolderPath];
+        
+        audioFilePath=[newurl.path stringByAppendingPathComponent:audioFileNameString];
+    
+   
+        
+        NSString* audioFilePathForDestination=[newurl.path stringByAppendingPathComponent:audioFileNameForDestination];
+        
+        destinationFilePath= [NSString stringWithFormat:@"%@",audioFilePathForDestination];
+        //destinationFilePath = [[NSString alloc] initWithFormat: @"%@/output.caf", documentsDirectory];
+        destinationURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)destinationFilePath, kCFURLPOSIXPathStyle, false);
+        sourceURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)audioFilePath, kCFURLPOSIXPathStyle, false);
+        NSError* error;
+        
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAudioProcessing error:&error];
+        
+        if (error)
+        {
+            printf("Setting the AVAudioSessionCategoryAudioProcessing Category failed! %ld\n", (long)error.code);
+            
+            return;
+        }
+        
+        
+        
+        [self convertAudio];
+   
+}
+
 - (bool)convertAudio
 {
     //    outputFormat = kAudioFormatLinearPCM;
@@ -351,14 +247,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     NSError* error1;
     
     if (error) {
-        // delete output file if it exists since an error was returned during the conversion process
-//        if ([[NSFileManager defaultManager] fileExistsAtPath:destinationFilePath]) {
-//            [[NSFileManager defaultManager] removeItemAtPath:destinationFilePath error:nil];
-//        }
-//        NSString* destinationPath=[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,self.recordedAudioFileName]];
-//        [[NSFileManager defaultManager] moveItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@copy.wav",AUDIO_FILES_FOLDER_NAME,self.recordedAudioFileName]] toPath:destinationPath error:&error1];
-//        printf("DoConvertFile failed! %d\n", (int)error);
-//        [self hideHud];
+
         
         return false;
     }
@@ -366,27 +255,45 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     {
         NSLog(@"Converted");
         
-        NSString* folderPath=[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:[NSString stringWithFormat:AUDIO_FILES_FOLDER_NAME]];
         NSError* error;
+
+        NSString* folderPath=[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:[NSString stringWithFormat:AUDIO_FILES_FOLDER_NAME]];
+        
         if (![[NSFileManager defaultManager] fileExistsAtPath:folderPath])
             [[NSFileManager defaultManager] createDirectoryAtPath:folderPath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
+        
         NSString* homeDirectoryFileName=[audioFilePath lastPathComponent];//store on same name as shared file name
 
           // [[NSFileManager defaultManager] moveItemAtPath:destinationFilePath toPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,@"compressed"]] error:&error1];
-                if ([[NSFileManager defaultManager] fileExistsAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,homeDirectoryFileName]]]) {
+                if ([[NSFileManager defaultManager] fileExistsAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,homeDirectoryFileName]]])
+                {
                     [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,homeDirectoryFileName]] error:nil];
                 }
 
      bool copied=   [[NSFileManager defaultManager] copyItemAtPath:destinationFilePath toPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,homeDirectoryFileName]] error:&error1];
-//        [[NSFileManager defaultManager] removeItemAtPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@copy.wav",AUDIO_FILES_FOLDER_NAME,self.recordedAudioFileName]] error:&error1];
-//        NSArray* pathComponents = [NSArray arrayWithObjects:
-//                                   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
-//                                   AUDIO_FILES_FOLDER_NAME,
-//                                   [NSString stringWithFormat:@"%@.wav", self.recordedAudioFileName],
-//                                   nil];
-       // self.recordedAudioURL=[NSURL fileURLWithPathComponents:pathComponents];
-        //        [self saveAudioRecordToDatabase];
-       // [self hideHud];
+
+//        if ([[NSFileManager defaultManager] fileExistsAtPath:destinationFilePath])
+//        {
+//            [[NSFileManager defaultManager] removeItemAtPath:destinationFilePath error:&error];//remove temporary file which was used to store compression result
+//        }
+//        if ([[NSFileManager defaultManager] fileExistsAtPath:audioFilePath])
+//        {
+//            [[NSFileManager defaultManager] removeItemAtPath:audioFilePath error:&error];//remove file stored at shared storage(i.e. in path extension) 
+//        }
+        
+        NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
+
+        
+        NSDictionary* copyDict=[sharedDefaults objectForKey:@"updatedFileDict"];
+        
+        NSMutableDictionary* updatedFileDict=[copyDict mutableCopy];
+        
+        [updatedFileDict setObject:@"NO" forKey:homeDirectoryFileName];
+        
+        [sharedDefaults setObject:updatedFileDict forKey:@"updatedFileDict"];
+        
+        [sharedDefaults synchronize];
+        
         return true;
     }
     
@@ -430,7 +337,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         
         //NSString* recordedAudioFileNamem4a=[NSString stringWithFormat:@"%@.wav",fileName];
         
-        NSString* sharedAudioFilePathString= [sharedAudioFolderPathString stringByAppendingPathComponent:fileName];
+        NSString* sharedAudioFilePathString= [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,fileName]];
         
         NSString* filePath=sharedAudioFilePathString;
         
@@ -454,6 +361,19 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         
         //int duration= ceil(player.duration);
         NSString *currentDuration1=[NSString stringWithFormat:@"%f",player.duration];
+        
+        NSURL* fileURL=[NSURL URLWithString:[filePath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:fileURL
+                                                    options:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                             [NSNumber numberWithBool:YES],
+                                                             AVURLAssetPreferPreciseDurationAndTimingKey,
+                                                             nil]];
+        
+        NSTimeInterval durationInSeconds = 0.0;
+        if (asset)
+            durationInSeconds = CMTimeGetSeconds(asset.duration) ;
+        
         NSString* fileSize=[NSString stringWithFormat:@"%ld",fileSizeinKB];
         int newDataUpdate=5;
         int newDataSend=0;
@@ -484,13 +404,12 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
    
     
     
-    [AudioSessionManager setAudioSessionCategory:AVAudioSessionCategoryPlayback];
+    [AudioSessionManager setAudioSessionCategory:AVAudioSessionCategoryAudioProcessing];
        // [recorder stop];
-    NSError *audioError;
     
     NSData* audioData=[NSData dataWithContentsOfFile:filePath];
     
-    
+   
     //NSLog(@"%@",[sharedDefaults objectForKey:@"assetUrl"]);
     
     //        dispatch_async(dispatch_get_main_queue(), ^
@@ -500,13 +419,14 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     
     [AudioSessionManager setAudioSessionCategory:AVAudioSessionCategoryPlayback];
     
-    self.player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
+    player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
     //player = [[AVAudioPlayer alloc] initWithContentsOfURL:filePath error:&audioError];
     //int maxValue= ceil(player.duration);
 
     //player.delegate = self;
     
     [player prepareToPlay];
+    
     
 }
 - (IBAction)playAudioButtonClicked:(id)sender
@@ -535,7 +455,6 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 
 - (UITableViewCell *)tableView:(UITableView *)tableview cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    APIManager* app=[APIManager sharedManager];
     NSDictionary* awaitingFileTransferDict;
     
     awaitingFileTransferDict=[[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray objectAtIndex:indexPath.row];
@@ -612,7 +531,6 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 
     else
     {
-    APIManager* app=[APIManager sharedManager];
     
     AudioDetailsViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioDetailsViewController"];
     vc.selectedView=@"Imported";

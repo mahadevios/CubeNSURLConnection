@@ -76,4 +76,5 @@
 
 -(void)getlistOfimportedFilesAudioDetailsArray:(int) newDataUpdate;
 
+-(void)updateAudioFileDeleteStatus:(NSString*)status fileName:(NSString*)fileName updatedDated:(NSString*)updatedDated;
 @end
