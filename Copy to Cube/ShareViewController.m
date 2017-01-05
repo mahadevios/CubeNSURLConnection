@@ -28,15 +28,14 @@ SLComposeSheetConfigurationItem *item;
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.view.backgroundColor=[UIColor whiteColor];
     
-//    UIButton* copyAudioFileButton=[[UIButton alloc] initWithFrame:CGRectMake(self.view.center.x-100, self.view.center.y-30, self.view.frame.size.width*0.8, 40)];
-       //NSArray* arr= itemProvider.registeredTypeIdentifiers;
-    
-    //[sharedDefaults setObject:arr forKey:@"array"];
     NSExtensionItem *item = self.extensionContext.inputItems.firstObject;
+    
     NSItemProvider *itemProvider = item.attachments.firstObject;
 
     fileNameLabel=[[UILabel alloc] initWithFrame:CGRectMake(self.view.center.x-(self.view.frame.size.width*0.3), self.view.center.y-100, self.view.frame.size.width*0.6, 40)];
+    
     fileNameLabel.textColor=[UIColor grayColor];
+    
     fileNameLabel.text=itemProvider.accessibilityLabel.lastPathComponent;
     
     UIButton* copyAudioFileButton=[[UIButton alloc] initWithFrame:CGRectMake(self.view.center.x-(self.view.frame.size.width*0.4), self.view.center.y-30, self.view.frame.size.width*0.8, 40)];
@@ -62,6 +61,18 @@ SLComposeSheetConfigurationItem *item;
     [navigationView addSubview:titleLabel];
     
     navigationView.backgroundColor=[UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1.0];
+    
+     UIButton* cancelExtensionButton=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
+    
+    [cancelExtensionButton addTarget:self action:@selector(cancelExtensionButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+
+    [cancelExtensionButton setTitle:@"Cancel" forState:UIControlStateNormal];
+
+    [cancelExtensionButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+
+    cancelExtensionButton.titleLabel.font=[UIFont boldSystemFontOfSize:16.0];
+    
+    [navigationView addSubview:cancelExtensionButton];
     
     [self.view addSubview:navigationView];
     
@@ -90,9 +101,9 @@ SLComposeSheetConfigurationItem *item;
     
     item = [[SLComposeSheetConfigurationItem alloc] init];
     // Give your configuration option a title.
-    [item setTitle:@"Item One"];
-    // Give it an initial value.
-    [item setValue:@"None"];
+//    [item setTitle:@"Item One"];
+//    // Give it an initial value.
+//    [item setValue:@"None"];
     // Handle what happens when a user taps your option.
     [item setTapHandler:^(void){
     }];
@@ -122,11 +133,12 @@ SLComposeSheetConfigurationItem *item;
     
 }
 
-- (IBAction)saveToCubeButtonClicked:(id)sender
-{
-    NSLog(@"hello");
-}
 
+- (void)cancelExtensionButtonClicked:(id)sender
+{
+    [self.extensionContext completeRequestReturningItems:@[]
+                                       completionHandler:nil];
+}
 - (void)copyAudioFileButtonClicked:(id)sender
 {
     NSString *typeIdentifier = (NSString *)kUTTypeAudio;
@@ -181,7 +193,7 @@ SLComposeSheetConfigurationItem *item;
                  
              }
              
-             [sharedDefaults setObject:[NSString stringWithFormat:@"%d",isFileAvailable] forKey:@"file"];
+            // [sharedDefaults setObject:[NSString stringWithFormat:@"%d",isFileAvailable] forKey:@"file"];
              if (!isFileAvailable)
              {
                  
@@ -235,6 +247,7 @@ SLComposeSheetConfigurationItem *item;
                  alertController = [UIAlertController alertControllerWithTitle:@"File already exist!"
                                                                        message:@"Replace file?"
                                                                 preferredStyle:UIAlertControllerStyleAlert];
+
                  actionDelete = [UIAlertAction actionWithTitle:@"Replace"
                                                          style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction * action)
@@ -309,7 +322,10 @@ SLComposeSheetConfigurationItem *item;
                                  }]; //You can use a block here to handle a press on this button
                  [alertController addAction:actionCancel];
                  
-                 [self presentViewController:alertController animated:YES completion:nil];
+                 
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     [self presentViewController:alertController animated:YES completion:nil];
+                 });
              }
              
              

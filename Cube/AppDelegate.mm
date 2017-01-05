@@ -518,6 +518,15 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         
         bool copied=   [[NSFileManager defaultManager] copyItemAtPath:destinationFilePath toPath:[NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,homeDirectoryFileName]] error:&error1];
         
+        if ([[NSFileManager defaultManager] fileExistsAtPath:destinationFilePath])
+        {
+            [[NSFileManager defaultManager] removeItemAtPath:destinationFilePath error:&error];//remove temporary file which was used to store compression result
+        }
+        if ([[NSFileManager defaultManager] fileExistsAtPath:audioFilePath])
+        {
+            [[NSFileManager defaultManager] removeItemAtPath:audioFilePath error:&error];//remove file stored at shared storage(i.e. in path extension)
+        }
+
         NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:SHARED_GROUP_IDENTIFIER];
         
         NSDictionary* copyDict=[sharedDefaults objectForKey:@"updatedFileDict"];
@@ -617,27 +626,18 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     
     NSMutableDictionary* sharedAudioNamesAndDateDict=[NSMutableDictionary new];
     
-    
-    NSString* sharedAudioFolderPathString=[sharedDefaults objectForKey:@"audioFolderPath"];
-    
     sharedAudioNamesArray=[sharedDefaults objectForKey:@"audioNamesArray"];
     
     sharedAudioNamesAndDateDict=[sharedDefaults objectForKey:@"audioNamesAndDateDict"];
     
     NSLog(@"%ld",sharedAudioNamesAndDateDict.count);
     
-    //    if (insertedFileCount==0)
-    //    {
-    //        insertedFileCount=1;
-    //    }
+    
     for (long i=0+insertedFileCount; i<sharedAudioNamesArray.count; i++)
     {
         NSString* originalFileName=[sharedAudioNamesArray objectAtIndex:i];
-        fileName=[originalFileName stringByDeletingPathExtension];
-        //fileName=[NSString stringWithFormat:@"%@.wav",fileName];
-        APIManager* app=[APIManager sharedManager];
         
-        //NSString* recordedAudioFileNamem4a=[NSString stringWithFormat:@"%@.wav",fileName];
+        fileName=[originalFileName stringByDeletingPathExtension];
         
         NSString* sharedAudioFilePathString= [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,fileName]];
         
@@ -658,16 +658,15 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         NSString* recordingDate=@"";//recording updated date
         
         int dictationStatus=5;
-        //    if (recordingPauseAndExit)
-        //    {
-        //        dictationStatus=2;
-        //    }
+        
         int transferStatus=0;
+        
         int deleteStatus=0;
+        
         NSString* deleteDate=@"";
+        
         NSString* transferDate=@"";
         
-        //int duration= ceil(player.duration);
         NSString *currentDuration1=[NSString stringWithFormat:@"%f",player.duration];
         
         NSURL* fileURL=[NSURL URLWithString:[filePath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -679,29 +678,27 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
                                                              nil]];
         
         NSTimeInterval durationInSeconds = player.duration;
+        
         if (asset)
             durationInSeconds = CMTimeGetSeconds(asset.duration) ;
         
         NSString* fileSize=[NSString stringWithFormat:@"%ld",fileSizeinKB];
+        
         int newDataUpdate=5;
+        
         int newDataSend=0;
+        
         int mobileDictationIdVal;
         
         NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
+        
         DepartMent *deptObj = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        //deptObj.departmentName=departmentNameLanel.text;
-        //DepartMent *deptObj=[[NSUserDefaults standardUserDefaults] valueForKey:SELECTED_DEPARTMENT_NAME];
-        //deptObj.departmentName;
+        
         NSString* departmentName=[[Database shareddatabase] getDepartMentIdFromDepartmentName:deptObj.departmentName];
         
         NSDictionary* audioRecordDetailsDict=[[NSDictionary alloc]initWithObjectsAndKeys:fileName,@"recordItemName",recordCreatedDateString,@"recordCreatedDate",recordingDate,@"recordingDate",transferDate,@"transferDate",[NSString stringWithFormat:@"%d",dictationStatus],@"dictationStatus",[NSString stringWithFormat:@"%d",transferStatus],@"transferStatus",[NSString stringWithFormat:@"%d",deleteStatus],@"deleteStatus",deleteDate,@"deleteDate",fileSize,@"fileSize",currentDuration1,@"currentDuration",[NSString stringWithFormat:@"%d",newDataUpdate],@"newDataUpdate",[NSString stringWithFormat:@"%d",newDataSend],@"newDataSend",[NSString stringWithFormat:@"%d",mobileDictationIdVal],@"mobileDictationIdVal",departmentName,@"departmentName",nil];
         
         [[Database shareddatabase] insertRecordingData:audioRecordDetailsDict];
-        //    if (recordingPauseAndExit)
-        //    {
-        //        int count= [db getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
-        //        [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
-        //    }
         
     }
     
@@ -711,31 +708,17 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 -(void)prepareAudioPlayer:(NSString*)filePath
 {
     
-    
-    
     [AudioSessionManager setAudioSessionCategory:AVAudioSessionCategoryAudioProcessing];
-    // [recorder stop];
     
     NSData* audioData=[NSData dataWithContentsOfFile:filePath];
-    
-    
-    //NSLog(@"%@",[sharedDefaults objectForKey:@"assetUrl"]);
-    
-    //        dispatch_async(dispatch_get_main_queue(), ^
-    //                       {
-    //NSLog(@"Reachable");
+
     NSError* error;
     
     [AudioSessionManager setAudioSessionCategory:AVAudioSessionCategoryPlayback];
     
     player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
-    //player = [[AVAudioPlayer alloc] initWithContentsOfURL:filePath error:&audioError];
-    //int maxValue= ceil(player.duration);
-    
-    //player.delegate = self;
     
     [player prepareToPlay];
-    
     
 }
 

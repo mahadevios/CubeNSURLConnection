@@ -29,6 +29,8 @@
     // [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",badgeCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
     self.navigationItem.title=@"Alert";
     app.incompleteFileTransferCount= [db getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
+    [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];
+
     [self.tableView reloadData];
 }
 -(void)showUserSettings:(id)sender
@@ -88,6 +90,7 @@
     else
     {
         inCompleteDictationLabel.text=@"Imported files";
+        noDictationLabel.text=[NSString stringWithFormat:@"%ld",[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count];
 
     }
     return cell;
