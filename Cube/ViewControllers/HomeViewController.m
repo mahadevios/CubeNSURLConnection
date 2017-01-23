@@ -61,7 +61,21 @@
                                              selector:@selector(getCounts) name:NOTIFICATION_FILE_UPLOAD_API
                                                object:nil];
     [UIApplication sharedApplication].idleTimerDisabled = NO;
-
+    
+//    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+//        if (granted) {
+//            NSLog(@"granted");
+//        } else {
+//            NSLog(@"denied");
+//            
+//            
+//            [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Microphone Access Denied" withMessage:@"You must allow microphone access in Settings > Privacy > Microphone" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+//          //  [alert show];
+//        }
+//    }];
+    
+     [self.tabBarController.tabBar setHidden:NO];
+//    [[Database shareddatabase] setDepartment];//to insert default department for imported files
 }
 
 -(void)getCounts
@@ -82,10 +96,22 @@
     transferFailedCountTextFiled.text=[NSString stringWithFormat:@"%d",app.transferFailedCount];
     
     int count= [db getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
-    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];//get count of imported non transferred files
+
+    int importedFileCount=[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count;
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count+importedFileCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    NSString* alertCount=[[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
     
     UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
-    
+
+    if ([alertCount isEqualToString:@"0"])
+    {
+        alertViewController.tabBarItem.badgeValue =nil;
+    }
+    else
     alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
 
 }

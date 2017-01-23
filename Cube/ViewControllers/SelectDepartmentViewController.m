@@ -70,6 +70,10 @@
 
     MainTabBarViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"MainTabBarViewController"];
 
+   // [[Database shareddatabase] setDepartment];//to insert default department for imported files
+
+    [[Database shareddatabase] setDepartment];//to insert default department for imported files
+
     [[[UIApplication sharedApplication] keyWindow] setRootViewController:vc];
    // [self dismissViewControllerAnimated:NO completion:^{[self checkAndDismissViewController];}];
     

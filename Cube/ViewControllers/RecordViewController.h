@@ -69,6 +69,8 @@
     
     int minutesValue;
     BOOL recordingNew;
+    
+    NSString* recordedAudioFileName;
 
 }
 @property (nonatomic,strong)     AVAudioPlayer       *player;

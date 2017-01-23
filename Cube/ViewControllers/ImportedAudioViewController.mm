@@ -21,7 +21,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 {
     [super viewDidLoad];
     
-    self.navigationItem.title=@"Imported Files";
+    self.navigationItem.title=@"Imported Dictations";
     self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"Back"] style:UIBarButtonItemStylePlain target:self action:@selector(popViewController:)];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -80,11 +80,32 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 //        }
 //    }
     
-    [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];
+    //[[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];
     
+    int count= [[Database shareddatabase] getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
     
+    [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];//get count of imported non transferred files
+    
+    int importedFileCount=[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count;
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count+importedFileCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    NSString* alertCount=[[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
+    
+    if ([alertCount isEqualToString:@"0"])
+    {
+        alertViewController.tabBarItem.badgeValue =nil;
+    }
+    else
+        alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+
     [self.tableView reloadData];
     
+    [self.tabBarController.tabBar setHidden:YES];
+
     
 }
 - (IBAction)backButtonPressed:(id)sender
@@ -456,12 +477,22 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     }
     else
     {
+        if ([[awaitingFileTransferDict valueForKey:@"TransferStatus"] isEqualToString:@"NotTransferred"])
+        {
+            statusLabel.text=@"Not Transferred";
+
+        }
+        else
         statusLabel.text=[awaitingFileTransferDict valueForKey:@"TransferStatus"];
     }
     
-    dateLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:0]];
+    if (dateAndTimeArray.count>1)
+    {
+        dateLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:0]];
+        
+        timeLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:1]];
+    }
     
-    timeLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:1]];
     
     return cell;
     

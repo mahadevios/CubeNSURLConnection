@@ -84,7 +84,7 @@
         if ([self.selectedView isEqualToString:@"Imported"])
 
     {
-        [transferDictationButton setTitle:@"Transfer" forState:UIControlStateNormal];
+        [transferDictationButton setTitle:@"Transfer Recording" forState:UIControlStateNormal];
         audiorecordDict= [[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray objectAtIndex:self.selectedRow];
     }
     if ([self.selectedView isEqualToString:@"Imported"])
@@ -240,18 +240,6 @@
                         
                         for (int i=0; i<sharedAudioNamesArray.count; i++)
                         {
-//                            NSString* fileNameWithoutExtension=[[sharedAudioNamesArray objectAtIndex:i] stringByDeletingPathExtension];
-//                            
-//                            [forDeleteStatusProxyArray addObject:fileNameWithoutExtension];
-//                            
-//                            NSString* pathExtension= [[sharedAudioNamesArray objectAtIndex:i] pathExtension];
-//                            
-//                            if ([forDeleteStatusProxyArray containsObject:fileName])
-//                            {
-//                                NSString* fileNameWithExtension=[NSString stringWithFormat:@"%@.%@",fileName,pathExtension];
-//                                
-//                                [sharedAudioNamesArray removeObject:fileNameWithExtension];
-//                            }
                             
                             NSString* fileNameWithoutExtension=[[sharedAudioNamesArray objectAtIndex:i] stringByDeletingPathExtension];
 
@@ -268,13 +256,6 @@
                             }
                             
                         }
-                        
-                       
-                        
-//                        if ([sharedAudioNamesArray containsObject:fileName])
-//                        {
-//                            [sharedAudioNamesArray removeObject:fileName];
-//                        }
                         
                         [sharedDefaults setObject:sharedAudioNamesArray forKey:@"audioNamesArray"];
                         

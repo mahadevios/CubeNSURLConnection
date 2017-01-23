@@ -41,7 +41,29 @@
     app.transferredListArray=[db getListOfTransferredOrDeletedFiles:@"Transferred"];
     app.deletedListArray=[db getListOfTransferredOrDeletedFiles:@"Deleted"];
 
+    int count= [[Database shareddatabase] getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
+    
+    [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];//get count of imported non transferred files
+    
+    int importedFileCount=[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count;
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count+importedFileCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    NSString* alertCount=[[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
+    
+    if ([alertCount isEqualToString:@"0"])
+    {
+        alertViewController.tabBarItem.badgeValue =nil;
+    }
+    else
+        alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
     [self.tableView reloadData];
+    
+    [self.tabBarController.tabBar setHidden:NO];
+
     
 }
 

@@ -39,15 +39,34 @@
 
     self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"Back"] style:UIBarButtonItemStylePlain target:self action:@selector(popViewController:)];
     
-    self.navigationItem.title=@"Incomplete Dictation(s)";
+    self.navigationItem.title=@"Incomplete Dictations";
     app.inCompleteFileTransferNamesArray=[db getListOfFileTransfersOfStatus:@"RecordingPause"];
     [self.tableView reloadData];
    // NSLog(@"%lu",(unsigned long)app.inCompleteFileTransferNamesArray.count);
     
-    UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
-    
-    alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+        int count= [db getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
+        
+        [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];//get count of imported non transferred files
+        
+        int importedFileCount=[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count;
+        
+        [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count+importedFileCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+        
+        NSString* alertCount=[[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+        
+        UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
+        
+        if ([alertCount isEqualToString:@"0"])
+        {
+            alertViewController.tabBarItem.badgeValue =nil;
+        }
+        else
+            alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+
     }
+    
+    [self.tabBarController.tabBar setHidden:YES];
+
 }
 -(void)popViewController:(id)sender
 {

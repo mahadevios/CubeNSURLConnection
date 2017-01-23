@@ -517,17 +517,32 @@ static APIManager *singleton = nil;
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if (connectionError)
         {
-            NSString* date= [[APIManager sharedManager] getDateAndTimeString];
-
-            [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:date mobiledictationidval:0];
- 
-            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+           
 
 //            [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:@"" mobiledictationidval:0];
+            //-1001 for request time out and -1005 network connection lost
+            if (connectionError.code==-1001 || connectionError.code==-1005)
+            {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    
+                    [self uploadFileToServer:str];
+                });
+            }
+            else
+            {
+                
+                NSString* date= [[APIManager sharedManager] getDateAndTimeString];
+                
+                [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:date mobiledictationidval:0];
+                
+                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
             
-            [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading failed" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
-           // NSLog(@"error = %@", connectionError);
+            [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"%@",connectionError.localizedDescription] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+            }
+            NSLog(@"error = %@", connectionError);
+
             return;
         }
         
@@ -585,7 +600,10 @@ static APIManager *singleton = nil;
              [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:@"" mobiledictationidval:0];
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
 
-          [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading failed" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+            NSLog(@"%@",str);
+
+            NSLog(@"%@",result);
+          [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading fail" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
         }
         
     }];

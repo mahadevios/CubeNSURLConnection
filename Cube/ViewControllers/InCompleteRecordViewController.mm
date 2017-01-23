@@ -523,6 +523,9 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
        // [self setCompressAudio];
 
     }
+    
+    [self updateAudioRecordToDatabase];
+
    // [self performSelector:@selector(addAnimatedView) withObject:nil afterDelay:0.0];
     [self addAnimatedView];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:BACK_TO_HOME_AFTER_DICTATION])
@@ -733,15 +736,30 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 
     }
     
+    
     //------------------------------to save(compose) and compressed the recording if it is not paused and saved--------------------------------------------------//
     
     
     //------------------------------for alert badge count--------------------------------------------------//
     
-    int badgeCount= [db getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
-    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",badgeCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    int count= [db getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
+    
+    [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];//get count of imported non transferred files
+    
+    int importedFileCount=[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count;
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count+importedFileCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    NSString* alertCount=[[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
     UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
-    alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    if ([alertCount isEqualToString:@"0"])
+    {
+        alertViewController.tabBarItem.badgeValue =nil;
+    }
+    else
+        alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
     
     //------------------------------for alert badge count--------------------------------------------------//
     
@@ -1283,8 +1301,24 @@ else
     app=[APIManager sharedManager];
     [self updateAudioRecordToDatabase];
     app.awaitingFileTransferCount= [db getCountOfTransfersOfDicatationStatus:@"RecordingComplete"];
-    int badgeCount= [db getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
-    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",badgeCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];//    UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
+    int count= [db getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
+    
+    [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];//get count of imported non transferred files
+    
+    int importedFileCount=[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count;
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count+importedFileCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    NSString* alertCount=[[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
+    
+    if ([alertCount isEqualToString:@"0"])
+    {
+        alertViewController.tabBarItem.badgeValue =nil;
+    }
+    else
+        alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];//    UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
 //    
 //    alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
 

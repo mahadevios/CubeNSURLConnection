@@ -70,11 +70,17 @@
 
 -(int)getTransferStatus:(NSString*)filename;
 
+-(NSString*)getDefaultDepartMentId;
+
 -(void)updateDepartment:(long)deptId fileName:(NSString*)fileName;
 
 -(int)getImportedFileCount;
 
 -(void)getlistOfimportedFilesAudioDetailsArray:(int) newDataUpdate;
 
--(void)updateAudioFileDeleteStatus:(NSString*)status fileName:(NSString*)fileName updatedDated:(NSString*)updatedDated;
+-(void)updateAudioFileDeleteStatus:(NSString*)status fileName:(NSString*)fileName updatedDated:(NSString*)updatedDated currentDuration:(NSString*)currentDuration fileSize:(NSString*) fileSize;
+
+-(void)setDepartment;
+
+-(void)addDictationStatus:(NSString*)dictationStatus;
 @end

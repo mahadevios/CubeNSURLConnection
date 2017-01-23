@@ -32,6 +32,26 @@
     [[Database shareddatabase] getlistOfimportedFilesAudioDetailsArray:5];
 
     [self.tableView reloadData];
+    
+    [self.tabBarController.tabBar setHidden:NO];
+    
+    int count= [[Database shareddatabase] getCountOfTransfersOfDicatationStatus:@"RecordingPause"];
+    
+    int importedFileCount=[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count;
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",count+importedFileCount] forKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    NSString* alertCount=[[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+    
+    UIViewController *alertViewController = [self.tabBarController.viewControllers objectAtIndex:3];
+    
+    if ([alertCount isEqualToString:@"0"])
+    {
+        alertViewController.tabBarItem.badgeValue =nil;
+    }
+    else
+        alertViewController.tabBarItem.badgeValue = [[NSUserDefaults standardUserDefaults] valueForKey:INCOMPLETE_TRANSFER_COUNT_BADGE];
+
 }
 -(void)showUserSettings:(id)sender
 {
@@ -89,7 +109,7 @@
     }
     else
     {
-        inCompleteDictationLabel.text=@"Imported files";
+        inCompleteDictationLabel.text=@"Imported Dictations";
         noDictationLabel.text=[NSString stringWithFormat:@"%ld",[AppPreferences sharedAppPreferences].importedFilesAudioDetailsArray.count];
 
     }

@@ -53,6 +53,8 @@
     [UIApplication sharedApplication].idleTimerDisabled = NO;
 
     [self.tableView reloadData];
+    
+    [self.tabBarController.tabBar setHidden:YES];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(validateFileUploadResponse:) name:NOTIFICATION_FILE_UPLOAD_API
@@ -109,6 +111,8 @@
 
 -(void)popViewController:(id)sender
 {
+    [self.tabBarController.tabBar setHidden:NO];
+
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -169,6 +173,7 @@
     NSArray* dateAndTimeArray=[dateAndTimeString componentsSeparatedByString:@" "];
     
     UILabel* timeLabel=[cell viewWithTag:102];
+    if (dateAndTimeArray.count>1)
     timeLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:1]];
     
     UILabel* nameLabel=[cell viewWithTag:103];
@@ -184,8 +189,13 @@
         dateAndTimeString=[awaitingFileTransferDict valueForKey:@"TransferDate"];
         dateAndTimeArray=nil;
         dateAndTimeArray=[dateAndTimeString componentsSeparatedByString:@" "];
-        timeLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:1]];
-        dateLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:0]];
+        
+        if (dateAndTimeArray.count>1)
+        {
+            timeLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:1]];
+            dateLabel.text=[NSString stringWithFormat:@"%@",[dateAndTimeArray objectAtIndex:0]];
+        }
+        
 
     }
     if ([[awaitingFileTransferDict valueForKey:@"DeleteStatus"] isEqualToString:@"Delete"])
