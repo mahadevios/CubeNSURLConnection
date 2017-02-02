@@ -32,7 +32,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+
     //self.navigationItem.title=@"Pin Login";
     //[self.navigationController.navigationBar setTitleTextAttributes:
     //@{NSForegroundColorAttributeName:[UIColor orangeColor]}];
