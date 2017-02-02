@@ -25,6 +25,7 @@ SLComposeSheetConfigurationItem *item;
 
 - (void)loadView
 {
+    //check commit
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.view.backgroundColor=[UIColor whiteColor];
     
