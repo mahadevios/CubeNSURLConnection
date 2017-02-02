@@ -129,6 +129,13 @@
 
         Database *db=[Database shareddatabase];
         [db insertDepartMentData:deptForDatabaseArray];
+        
+        
+        //get user firstname,lastname and userId for file prefix
+        
+        NSString* fileNamePrefix = [responseDict valueForKey:@"FileNamePrefix"];
+        [[NSUserDefaults standardUserDefaults] setValue:fileNamePrefix forKey:@"FileNamePrefix"];
+        
         [pinCode4TextField resignFirstResponder];
         [self dismissViewControllerAnimated:NO completion:nil];
 

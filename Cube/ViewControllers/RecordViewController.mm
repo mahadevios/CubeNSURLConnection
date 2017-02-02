@@ -139,6 +139,15 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         UIView* startRecordingView1= [self.view viewWithTag:203];
         [self performSelector:@selector(addView:) withObject:startRecordingView1 afterDelay:0.02];
     
+        UIView* startRecordingView= [self.view viewWithTag:303];
+        
+        UIImageView* counterLabel= [startRecordingView viewWithTag:503];
+        
+        UILabel* fileNameLabel= [self.view viewWithTag:101];
+        
+        UILabel* transferredByLabel= [self.view viewWithTag:102];
+        
+        UILabel* dateLabel= [self.view viewWithTag:103];
         i=0;
         circleViewTimerMinutes=0;
         circleViewTimerSeconds=0;
@@ -151,29 +160,64 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         long milliseconds = seconds*1000;
         self.recordedAudioFileName = [NSString stringWithFormat:@"%ld", milliseconds];
     
+        
+        NSString* dateFileNameString=[app getDateAndTimeString];
+        
+        NSDateFormatter* dateFormatter = [NSDateFormatter new];
+        
+        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+        
+        NSString* todaysDate = [dateFormatter stringFromDate:[NSDate new]];
+        
+        NSString* storedTodaysDate = [[NSUserDefaults standardUserDefaults] valueForKey:@"TodaysDate"];
+        
+
+        if ([todaysDate isEqualToString:storedTodaysDate])
+        {
+            todaysSerialNumberCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"todaysSerialNumberCount"] longLongValue];
+            todaysSerialNumberCount++;
+
+        }
+        else
+        {
+            [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:@"TodaysDate"];
+            [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"todaysSerialNumberCount"];
+            NSString* countString=[[NSUserDefaults standardUserDefaults] valueForKey:@"todaysSerialNumberCount"];
+            todaysSerialNumberCount = [countString longLongValue];
+
+            todaysSerialNumberCount++;
+
+        }
+        
+        todaysDate=[todaysDate stringByReplacingOccurrencesOfString:@"-" withString:@""];
+
+        
+        
+        NSString* fileNamePrefix;
+        
+        fileNamePrefix=[[NSUserDefaults standardUserDefaults] valueForKey:@"FileNamePrefix"];
+        //fileNamePrefix = [[NSUserDefaults standardUserDefaults] valueForKey:@"fileNamePrefix"];
+
+        self.recordedAudioFileName=[NSString stringWithFormat:@"%@%@-%02ld",fileNamePrefix,todaysDate,todaysSerialNumberCount];
+        
+        fileNameLabel.text=[NSString stringWithFormat:@"%@%@-%02ld",fileNamePrefix,todaysDate,todaysSerialNumberCount];
+        
+       // fileNameLabel.text=[NSString stringWithFormat:@"%@%@",[[NSUserDefaults standardUserDefaults] valueForKey:RECORD_ABBREVIATION],self.recordedAudioFileName];
+        
+       // self.recordedAudioFileName=[NSString stringWithFormat:@"%@%@",[[NSUserDefaults standardUserDefaults] valueForKey:RECORD_ABBREVIATION],self.recordedAudioFileName];
         //---
     
     
         self.navigationItem.title=@"Record";
     
-        UIView* startRecordingView= [self.view viewWithTag:303];
-        
-        UIImageView* counterLabel= [startRecordingView viewWithTag:503];
-        
-        UILabel* fileNameLabel= [self.view viewWithTag:101];
-
-        UILabel* transferredByLabel= [self.view viewWithTag:102];
-
-        UILabel* dateLabel= [self.view viewWithTag:103];
+       
 
         [counterLabel setHidden:NO];//hide time label when view appear
     
         [[self.view viewWithTag:504] setHidden:YES];
 
     
-        fileNameLabel.text=[NSString stringWithFormat:@"%@%@",[[NSUserDefaults standardUserDefaults] valueForKey:RECORD_ABBREVIATION],self.recordedAudioFileName];
         
-        self.recordedAudioFileName=[NSString stringWithFormat:@"%@%@",[[NSUserDefaults standardUserDefaults] valueForKey:RECORD_ABBREVIATION],self.recordedAudioFileName];
     
         NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
         DepartMent *deptObj = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -1002,6 +1046,9 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     UILabel* recordingStatusLabel= [self.view viewWithTag:99];
     
     UIImageView* startRecordingImageView;
+    
+   
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%ld",todaysSerialNumberCount] forKey:@"todaysSerialNumberCount"];
     
     [self audioRecord];
     

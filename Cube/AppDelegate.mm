@@ -40,6 +40,8 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     //[Keychain setString:macId forKey:@"udid"];
 
        [self checkAndCopyDatabase];
+    
+    
   //  [[NSUserDefaults standardUserDefaults] setValue:timeLabel.text forKey:LOW_STORAGE_THRESHOLD];
     if ([[NSUserDefaults standardUserDefaults] valueForKey:LOW_STORAGE_THRESHOLD]== NULL)
     {
@@ -99,6 +101,21 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         printf("You probably want to fix this before continuing!");
     }
 
+//    NSDateFormatter* dateFormatter = [NSDateFormatter new];
+//    
+//    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+//    
+//    NSString* todaysDate = [dateFormatter stringFromDate:[NSDate new]];
+//    
+//    [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:@"TodaysDate"];
+//    
+//    NSString* todaysSerialNumberCount = [[NSUserDefaults standardUserDefaults] valueForKey:@"todaysSerialNumberCount"];
+//    
+//    if ( [todaysSerialNumberCount isEqual:NULL])
+//    {
+//        [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"todaysSerialNumberCount"];
+//    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [self getImportedFiles];
@@ -243,6 +260,22 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         LoginViewController* loginViewController=[storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
         [self.window.rootViewController presentViewController:loginViewController animated:NO completion:nil];
     }
+    
+//    NSDateFormatter* dateFormatter = [NSDateFormatter new];
+//    
+//    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+//    
+//    NSString* todaysDate = [dateFormatter stringFromDate:[NSDate new]];
+//    
+//    [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:@"TodaysDate"];
+//    
+//    NSString* todaysSerialNumberCount = [[NSUserDefaults standardUserDefaults] valueForKey:@"todaysSerialNumberCount"];
+//    
+//    if ( [todaysSerialNumberCount isEqual:NULL])
+//    {
+//        [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"todaysSerialNumberCount"];
+//    }
+//
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         

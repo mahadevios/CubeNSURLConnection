@@ -71,6 +71,8 @@
     BOOL recordingNew;
     
     NSString* recordedAudioFileName;
+    
+    long todaysSerialNumberCount;
 
 }
 @property (nonatomic,strong)     AVAudioPlayer       *player;
