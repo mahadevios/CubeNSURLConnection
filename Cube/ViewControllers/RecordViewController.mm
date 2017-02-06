@@ -825,6 +825,52 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
                   
                   [self dismissViewControllerAnimated:YES completion:nil];
               }
+              
+              /*
+               for updated UI
+               
+               UIView* pauseView=  [self.view viewWithTag:302];
+               UIImageView* pauseImageView= [pauseView viewWithTag:402];
+               if ( [pauseImageView.image isEqual:[UIImage imageNamed:@"Pause"]])
+               {
+               UIImageView* animatedView= [self.view viewWithTag:1001];
+               [animatedView stopAnimating];
+               animatedView.image=[UIImage imageNamed:@"SoundWave-3"];
+               
+               hud.minSize = CGSizeMake(150.f, 100.f);
+               hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+               hud.mode = MBProgressHUDModeIndeterminate;
+               hud.label.text = @"Saving audio..";
+               hud.detailsLabel.text = @"Please wait";
+               
+               
+               [self pauseRecording];
+               //[self pauseRecording];
+               recordingPausedOrStoped=YES;
+               [stopTimer invalidate];
+               pauseImageView.image=[UIImage imageNamed:@"Play"];
+               }
+               else
+               {
+               recordingPauseAndExit=NO;
+               recordingPausedOrStoped=NO;
+               UIImageView* animatedView= [self.view viewWithTag:1001];
+               [animatedView startAnimating];
+               
+               [self audioRecord];
+               [stopTimer invalidate];
+               [self setTimer];
+               [self startRecorderAfterPrepareed];
+               [UIApplication sharedApplication].idleTimerDisabled = YES;
+               
+               //[self performSelector:@selector(startRecorderAfterPrepareed) withObject:nil afterDelay:0.3];
+               //[self performSelectorOnMainThread:@selector(startRecorderAfterPrepareed) withObject:nil waitUntilDone:YES];
+               
+               pauseImageView.image=[UIImage imageNamed:@"Pause"];
+               }
+               
+               
+               */
           }
           
           else
@@ -899,6 +945,53 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
                                       
                                       [self dismissViewControllerAnimated:YES completion:nil];
                                   }
+                                  
+                                  
+                                  /*
+                                   for updated UI
+                                   
+                                   UIView* pauseView=  [self.view viewWithTag:302];
+                                   UIImageView* pauseImageView= [pauseView viewWithTag:402];
+                                   if ( [pauseImageView.image isEqual:[UIImage imageNamed:@"Pause"]])
+                                   {
+                                   UIImageView* animatedView= [self.view viewWithTag:1001];
+                                   [animatedView stopAnimating];
+                                   animatedView.image=[UIImage imageNamed:@"SoundWave-3"];
+                                   
+                                   hud.minSize = CGSizeMake(150.f, 100.f);
+                                   hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                   hud.mode = MBProgressHUDModeIndeterminate;
+                                   hud.label.text = @"Saving audio..";
+                                   hud.detailsLabel.text = @"Please wait";
+                                   
+                                   
+                                   [self pauseRecording];
+                                   //[self pauseRecording];
+                                   recordingPausedOrStoped=YES;
+                                   [stopTimer invalidate];
+                                   pauseImageView.image=[UIImage imageNamed:@"Play"];
+                                   }
+                                   else
+                                   {
+                                   recordingPauseAndExit=NO;
+                                   recordingPausedOrStoped=NO;
+                                   UIImageView* animatedView= [self.view viewWithTag:1001];
+                                   [animatedView startAnimating];
+                                   
+                                   [self audioRecord];
+                                   [stopTimer invalidate];
+                                   [self setTimer];
+                                   [self startRecorderAfterPrepareed];
+                                   [UIApplication sharedApplication].idleTimerDisabled = YES;
+                                   
+                                   //[self performSelector:@selector(startRecorderAfterPrepareed) withObject:nil afterDelay:0.3];
+                                   //[self performSelectorOnMainThread:@selector(startRecorderAfterPrepareed) withObject:nil waitUntilDone:YES];
+                                   
+                                   pauseImageView.image=[UIImage imageNamed:@"Pause"];
+                                   }
+                                   
+                                   
+                                   */
                               }]; //You can use a block here to handle a press on this button
               [alertController addAction:actionDelete];
               

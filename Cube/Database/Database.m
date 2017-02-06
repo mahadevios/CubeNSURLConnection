@@ -1056,7 +1056,31 @@ static Database *db;
        // NSLog(@"Db is not closed due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
     }
     
+    // sorting for latest date file on top
     
+    
+    NSDictionary*  headerObj1=[[NSDictionary alloc]init];
+    NSDictionary*  headerObj2=[[NSDictionary alloc]init];
+    NSDictionary*  temp=[[NSDictionary alloc]init];
+    NSComparisonResult result;
+    
+    for (int i=0; i<listArray.count; i++)
+    {
+        for (int j=1; j<listArray.count-i; j++)
+        {
+            headerObj1= [listArray objectAtIndex:j-1];
+            headerObj2=  [listArray objectAtIndex:j];
+            result=[[headerObj1 valueForKey:@"Date" ] compare:[headerObj2 valueForKey:@"Date" ]];
+            if (result==NSOrderedAscending)
+            {
+                temp=[listArray objectAtIndex:j-1];
+                [listArray replaceObjectAtIndex:j-1 withObject:[listArray objectAtIndex:j]];
+                [listArray replaceObjectAtIndex:j withObject:temp];
+                
+            }
+        }
+    }
+
     return listArray;
     
 

@@ -457,9 +457,11 @@ static APIManager *singleton = nil;
     NSDictionary *params = @{@"filename"     : str,
                              };
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+        
     [request setHTTPMethod:@"POST"];
     
     long filesizelong=[[APIManager sharedManager] getFileSize:filePath];
+        
     int filesizeint=(int)filesizelong;
     
    // NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
