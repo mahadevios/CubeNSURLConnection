@@ -60,6 +60,7 @@
 
 #define SAVE_DICTATION_WAITING_SETTING         @"Save dictation waiting by"
 #define CONFIRM_BEFORE_SAVING_SETTING          @"Confirm before saving"
+#define CONFIRM_BEFORE_SAVING_SETTING_ALTERED  @"Confirm before saving alter"
 #define ALERT_BEFORE_RECORDING                 @"Alert before recording"
 #define BACK_TO_HOME_AFTER_DICTATION           @"Back to home after dictation"
 #define RECORD_ABBREVIATION                    @"Record abbreviation"

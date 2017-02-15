@@ -69,6 +69,7 @@
     pinCode4TextField.layer.masksToBounds=YES;
     pinCode4TextField.layer.borderColor=[[UIColor grayColor]CGColor];
     pinCode4TextField.layer.borderWidth= 1.0f;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(validatePinResponseCheck:) name:NOTIFICATION_VALIDATE_PIN_API
                                                object:nil];
@@ -86,7 +87,9 @@
 -(void)validatePinResponseCheck:(NSNotification*)dictObj;
 {
     NSDictionary* responseDict=dictObj.object;
+    
     NSString* responseCodeString=  [responseDict valueForKey:RESPONSE_CODE];
+    
     NSString* responsePinString=  [responseDict valueForKey:@"pinvalidflag"];
     
     if ([responseCodeString intValue]==401 && [responsePinString intValue]==0)
@@ -115,37 +118,50 @@
 
         [AppPreferences sharedAppPreferences].userObj.userPin = pin;
         
+        
 
         NSArray* departmentArray=  [responseDict valueForKey:@"DepartmentList"];
+        
         NSMutableArray* deptForDatabaseArray=[[NSMutableArray alloc]init];
+        
         for (int i=0; i<departmentArray.count; i++)
         {
             DepartMent* deptObj=[[DepartMent alloc]init];
+            
             NSDictionary* deptDict= [departmentArray objectAtIndex:i];
+            
             deptObj.Id= [[deptDict valueForKey:@"ID"]longLongValue];
+            
             deptObj.departmentName=[deptDict valueForKey:@"DeptName"];
+            
             [deptForDatabaseArray addObject:deptObj];
         }
 
         Database *db=[Database shareddatabase];
+        
         [db insertDepartMentData:deptForDatabaseArray];
         
         
         //get user firstname,lastname and userId for file prefix
         
         NSString* fileNamePrefix = [responseDict valueForKey:@"FileNamePrefix"];
+        
         [[NSUserDefaults standardUserDefaults] setValue:fileNamePrefix forKey:@"FileNamePrefix"];
         
         [pinCode4TextField resignFirstResponder];
+        
         [self dismissViewControllerAnimated:NO completion:nil];
 
 
         MainTabBarViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"MainTabBarViewController"];
+        
         [[UIApplication sharedApplication] keyWindow].rootViewController = nil;
+        
         [[[UIApplication sharedApplication] keyWindow] setRootViewController:vc];
 
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isLoadedFirstTime"])
         {
+            
             [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"SelectDepartmentViewController"] animated:NO completion:nil];
 
         }
@@ -166,13 +182,15 @@
     }
 }
 
-- (UIViewController *)topViewController{
+- (UIViewController *)topViewController
+{
     return [self topViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
 }
 
 - (UIViewController *)topViewController:(UIViewController *)rootViewController
 {
-    if (rootViewController.presentedViewController == nil) {
+    if (rootViewController.presentedViewController == nil)
+    {
         return rootViewController;
     }
     

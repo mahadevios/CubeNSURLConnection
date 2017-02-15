@@ -6,6 +6,9 @@
 //  Copyright © 2016 Xanadutec. All rights reserved.
 //
 
+// Pro. Profile,code signing in deep  http://stackoverflow.com/questions/24583654/understanding-the-certificate-and-provisioning-profile-let-me-know-if-it-is-rig
+
+//code resource http://escoz.com/blog/demystifying-ios-certificates-and-provisioning-files/
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "RegistrationViewController.h"
@@ -38,7 +41,8 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     //[[Database shareddatabase] updateDemo:@"MOB-495617757209"];
 
     //[Keychain setString:macId forKey:@"udid"];
-
+   //double h =  [[UIScreen mainScreen] bounds].size.height;
+   // [[UIScreen mainScreen] bounds].size.width;
        [self checkAndCopyDatabase];
     
     
@@ -58,7 +62,10 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         [[NSUserDefaults standardUserDefaults] setValue:@"15 min" forKey:SAVE_DICTATION_WAITING_SETTING];
         
     }
-    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:CONFIRM_BEFORE_SAVING_SETTING_ALTERED])
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:CONFIRM_BEFORE_SAVING_SETTING];
+    }
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLoadedFirstTime"];
 
    // NSLog(@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:LOW_STORAGE_THRESHOLD]);
@@ -156,7 +163,9 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_PAUSE_RECORDING object:nil];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_PAUSE_RECORDING object:nil];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_PAUSE_AUDIO_PALYER object:nil];//to pause and remove audio player
 
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.

@@ -29,8 +29,12 @@
     NSTimer* stopTimer;
     int timerSeconds;
     int timerMinutes;
+    int timerHour;
+
     int circleViewTimerMinutes;
     int circleViewTimerSeconds;
+    int circleViewTimerHour;
+
     UILabel* currentDuration;
     UILabel* totalDuration;
     bool recordingPausedOrStoped;
@@ -60,6 +64,7 @@
     NSString* bsackUpAudioFileName;
     bool composed;
     bool isRecording;
+    UIView* circleView;
 }
 @property (nonatomic)     AVAudioPlayer       *player;
 @property (nonatomic)     AVAudioRecorder     *recorder;
@@ -81,4 +86,9 @@
 - (IBAction)backButtonPressed:(id)sender;
 - (IBAction)moreButtonPressed:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+- (IBAction)stopRecordingButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *stopNewButton;
+@property (weak, nonatomic) IBOutlet UIImageView *stopNewImageView;
+@property (weak, nonatomic) IBOutlet UILabel *stopLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *animatedImageView;
 @end

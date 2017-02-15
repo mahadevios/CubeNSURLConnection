@@ -20,28 +20,33 @@
 
 @interface RecordViewController : UIViewController<UIGestureRecognizerDelegate,AVAudioPlayerDelegate>
 {
-    int i;
+    Database* db;
+    APIManager* app;
+    
     UITapGestureRecognizer* tap;
+    
     UIView* popupView;
     UIView* editPopUp;
     PopUpCustomView* forTableViewObj;
+    
     UITableViewCell *cell;
     NSArray* departmentNamesArray;
+    NSString* selectedDepartment;
+
     UISlider* audioRecordSlider;
-    Database* db;
-    APIManager* app;
+    
     bool recordingPauseAndExit;
     bool recordingPausedOrStoped;
     bool isRecordingStarted;
 
     UILabel* cirecleTimerLAbel;
     NSTimer*  stopTimer;
-    int circleViewTimerMinutes;
-    int circleViewTimerSeconds;
     UILabel* currentDuration;
     UILabel* totalDuration;
-
-    NSString* selectedDepartment;
+    int circleViewTimerMinutes;
+    int circleViewTimerSeconds;
+    int circleViewTimerHours;
+    
     //for dictation wauting by setting
     NSString* maxRecordingTimeString;
     int dictationTimerSeconds;
@@ -51,7 +56,6 @@
     UIAlertController *alertController;
     UIAlertAction *actionDelete;
     UIAlertAction *actionCancel;
-    BOOL deleted;
     NSDictionary* audiorecordDict;
     
     //for audio compression
@@ -60,18 +64,21 @@
     CFURLRef sourceURL;
     CFURLRef destinationURL;
     OSType   outputFormat;
-
     Float64  sampleRate;
     
+    int minutesValue;
+    BOOL deleted;
     BOOL paused;
     BOOL stopped;
+    BOOL recordingNew;
+
     UIBackgroundTaskIdentifier task;
     
-    int minutesValue;
-    BOOL recordingNew;
     
     NSString* recordedAudioFileName;
     
+    UIView* circleView;
+
     long todaysSerialNumberCount;
 
 }
@@ -81,10 +88,15 @@
 @property (nonatomic,strong)     NSURL               *recordedAudioURL;
 @property (nonatomic,strong)     NSString              *recordCreatedDateString;
 @property (weak, nonatomic) MBProgressHUD *hud;
+@property (weak, nonatomic) IBOutlet UIButton *stopNewButton;
+@property (weak, nonatomic) IBOutlet UIImageView *stopNewImageView;
 
 - (IBAction)backButtonPressed:(id)sender;
 - (IBAction)moreButtonPressed:(id)sender;
 - (IBAction)deleteRecording:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+- (IBAction)stopRecordingButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *stopLabel;
+@property (weak, nonatomic) IBOutlet UILabel *recordLAbel;
 
 @end

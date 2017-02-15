@@ -24,7 +24,8 @@
     //        self.edgesForExtendedLayout = UIRectEdgeNone;
     poUpTableView.layer.cornerRadius=2.0f;
     app = [AppPreferences sharedAppPreferences];
-    recordSettingsItemsarray=[[NSMutableArray alloc]initWithObjects:SAVE_DICTATION_WAITING_SETTING,CONFIRM_BEFORE_SAVING_SETTING,ALERT_BEFORE_RECORDING,BACK_TO_HOME_AFTER_DICTATION,RECORD_ABBREVIATION, nil];
+//    recordSettingsItemsarray=[[NSMutableArray alloc]initWithObjects:SAVE_DICTATION_WAITING_SETTING,CONFIRM_BEFORE_SAVING_SETTING,ALERT_BEFORE_RECORDING,BACK_TO_HOME_AFTER_DICTATION,RECORD_ABBREVIATION, nil];
+    recordSettingsItemsarray=[[NSMutableArray alloc]initWithObjects:SAVE_DICTATION_WAITING_SETTING,CONFIRM_BEFORE_SAVING_SETTING,ALERT_BEFORE_RECORDING,BACK_TO_HOME_AFTER_DICTATION, nil];
     storageManagementItemsArray=[[NSMutableArray alloc]initWithObjects:LOW_STORAGE_THRESHOLD,PURGE_DELETED_DATA, nil];
     PlaybackAutoRewindByArray=[[NSMutableArray alloc]initWithObjects:CHANGE_YOUR_PASSWORD, nil];
     popUpOptionsArray=[[NSMutableArray alloc]init];
@@ -50,6 +51,7 @@
     self.navigationItem.title=@"User Settings";
     self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"Back"] style:UIBarButtonItemStylePlain target:self action:@selector(popViewController:)];
     
+   
     //NSLog(@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:LOW_STORAGE_THRESHOLD]);
     
 }
@@ -382,6 +384,9 @@
     {
         bool confirmBeforeSaving=sender.isOn;
         [[NSUserDefaults standardUserDefaults] setBool:confirmBeforeSaving forKey:CONFIRM_BEFORE_SAVING_SETTING];
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:CONFIRM_BEFORE_SAVING_SETTING_ALTERED];
+
     }
     if (sender.tag==2)
     {

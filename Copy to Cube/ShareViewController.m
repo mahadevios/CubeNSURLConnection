@@ -29,6 +29,7 @@ SLComposeSheetConfigurationItem *item;
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.view.backgroundColor=[UIColor whiteColor];
     
+    
     NSExtensionItem *item = self.extensionContext.inputItems.firstObject;
     
     NSItemProvider *itemProvider = item.attachments.firstObject;
@@ -93,11 +94,16 @@ SLComposeSheetConfigurationItem *item;
     screenRect = [[UIScreen mainScreen] bounds];
     screenWidth = screenRect.size.width;
     screenHeight = screenRect.size.height;
+    
+    
 //[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopRotation:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
-
+- (UIStatusBarStyle) preferredStatusBarStyle
+{
+    return UIStatusBarStyleBlackTranslucent;
+}
 - (InterfaceOrientationType)orientation{
     
     CGFloat scale = [UIScreen mainScreen].scale;
