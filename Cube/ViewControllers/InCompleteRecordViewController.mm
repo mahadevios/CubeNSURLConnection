@@ -1355,12 +1355,18 @@ else
     recordingPauseAndExit=YES;
     [recorder pause];
     [recorder stop];
-    UIView* pauseView=  [self.view viewWithTag:302];
-    UIImageView* pauseImageView= [pauseView viewWithTag:402];
+    
     [stopTimer invalidate];
     
+    UIView* startRecordingView= [self.view viewWithTag:303];
     
-    pauseImageView.image=[UIImage imageNamed:@"Play"];
+    UIImageView* startRecordingImageView;
+    
+    startRecordingImageView  = [startRecordingView viewWithTag:403];
+
+     [startRecordingImageView setFrame:CGRectMake((startRecordingView.frame.size.width/2)-15, (startRecordingView.frame.size.height/2)-16, 30, 32)];
+    
+    startRecordingImageView.image=[UIImage imageNamed:@"ResumeNew"];
     
    // [self setCompressAudio];
     

@@ -9,6 +9,8 @@
 // Pro. Profile,code signing in deep  http://stackoverflow.com/questions/24583654/understanding-the-certificate-and-provisioning-profile-let-me-know-if-it-is-rig
 
 //code resource http://escoz.com/blog/demystifying-ios-certificates-and-provisioning-files/
+
+//code signing apple https://developer.apple.com/library/content/documentation/Security/Conceptual/CodeSigningGuide/AboutCS/AboutCS.html#//apple_ref/doc/uid/TP40005929-CH3-SW3
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "RegistrationViewController.h"
