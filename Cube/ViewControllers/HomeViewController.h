@@ -17,6 +17,9 @@
     UITapGestureRecognizer* tap;
     APIManager* app;
     Database* db;
+    UIAlertController *alertController;
+    UIAlertAction *actionDelete;
+    UIAlertAction *actionCancel;
     
 }
 @property (weak, nonatomic) IBOutlet UIView *transferredView;

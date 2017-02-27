@@ -11,6 +11,10 @@
 //code resource http://escoz.com/blog/demystifying-ios-certificates-and-provisioning-files/
 
 //code signing apple https://developer.apple.com/library/content/documentation/Security/Conceptual/CodeSigningGuide/AboutCS/AboutCS.html#//apple_ref/doc/uid/TP40005929-CH3-SW3
+
+// double code signing http://blog.bitrise.io/2016/09/21/xcode-8-and-automatic-code-signing.html
+
+//siging identities and certificates  https://developer.apple.com/library/content/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingCertificates/MaintainingCertificates.html
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "RegistrationViewController.h"
@@ -68,6 +72,11 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:CONFIRM_BEFORE_SAVING_SETTING];
     }
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:PURGE_DELETED_DATA])
+    {
+        [[NSUserDefaults standardUserDefaults] setValue:@"15 days" forKey:PURGE_DELETED_DATA];
+    }
+
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLoadedFirstTime"];
 
    // NSLog(@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:LOW_STORAGE_THRESHOLD]);

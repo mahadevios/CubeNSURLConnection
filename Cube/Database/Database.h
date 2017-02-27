@@ -83,4 +83,7 @@
 -(void)setDepartment;
 
 -(void)addDictationStatus:(NSString*)dictationStatus;
+
+-(NSArray*) getFilesToBePurged;
+
 @end

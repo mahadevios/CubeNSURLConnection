@@ -74,8 +74,88 @@
 //        }
 //    }];
     
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"MM-dd-yyyy";
+    NSString* todaysDate = [formatter stringFromDate:[NSDate date]];
+    
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:PURGE_DATA_DATE]== NULL)
+    {
+       
+        [self deleteDictation];
+    }
+    else
+    if (!([[[NSUserDefaults standardUserDefaults] valueForKey:PURGE_DATA_DATE] isEqualToString:todaysDate]))
+    {
+        [self deleteDictation];
+       // [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:PURGE_DATA_DATE];
+
+
+    }
+  //  [[NSUserDefaults standardUserDefaults] setValue:NULL forKey:PURGE_DATA_DATE];
+
      [self.tabBarController.tabBar setHidden:NO];
 //    [[Database shareddatabase] setDepartment];//to insert default department for imported files
+}
+- (void)deleteDictation
+{
+    
+    
+   NSArray* filesToBePurgedArray = [[Database shareddatabase] getFilesToBePurged];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"MM-dd-yyyy";
+    NSString* todaysDate = [formatter stringFromDate:[NSDate date]];
+    
+    if (filesToBePurgedArray>0)
+    {
+        alertController = [UIAlertController alertControllerWithTitle:@"Purge old dictations?"
+                                                              message:nil
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+        actionDelete = [UIAlertAction actionWithTitle:@"Purge"
+                                                style:UIAlertActionStyleDestructive
+                                              handler:^(UIAlertAction * action)
+                        {
+                            for (int i=0; i< filesToBePurgedArray.count; i++)
+                            {
+                          
+                            
+                            NSString* fileName = [filesToBePurgedArray objectAtIndex:i];
+                            NSString* dateAndTimeString = [app getDateAndTimeString];
+                            [db updateAudioFileStatus:@"RecordingDelete" fileName:fileName dateAndTime:dateAndTimeString];
+                            [app deleteFile:[NSString stringWithFormat:@"%@backup",fileName]];
+                            BOOL delete= [[APIManager sharedManager] deleteFile:fileName];
+                            
+                                
+                            [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:PURGE_DATA_DATE];
+
+//                            if (delete)
+//                            {
+                                [self dismissViewControllerAnimated:YES completion:nil];
+                           // }
+                            }
+                        }]; //You can use a block here to handle a press on this button
+        [alertController addAction:actionDelete];
+        
+        
+        actionCancel = [UIAlertAction actionWithTitle:@"Later"
+                                                style:UIAlertActionStyleCancel
+                                              handler:^(UIAlertAction * action)
+                        {
+                           
+                                               //NSLog(@"Reachable");
+                                               
+                                               [alertController dismissViewControllerAnimated:YES completion:nil];
+                                               [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:PURGE_DATA_DATE];
+// [[NSUserDefaults standardUserDefaults] setValue:NULL forKey:PURGE_DATA_DATE];
+                            
+                            
+                        }]; //You can use a block here to handle a press on this button
+        [alertController addAction:actionCancel];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    
+
+    
 }
 
 -(void)getCounts

@@ -72,6 +72,7 @@
 #define TRANSFER_MESSAGE                       @"Are you sure you want to transfer this recording?"
 #define RESEND_MESSAGE                         @"Are you sure you want to resend this recording?"
 #define PAUSE_STOP_MESSAGE                     @"Recording is on.Please pause/stop the recording"
+#define PURGE_DATA_DATE                        @"purgeDataDate"
 
 
 #define INCOMPLETE_TRANSFER_COUNT_BADGE        @"Incomplete Count"
