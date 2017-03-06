@@ -65,7 +65,7 @@
 #define BACK_TO_HOME_AFTER_DICTATION           @"Back to home after dictation"
 #define RECORD_ABBREVIATION                    @"Record abbreviation"
 #define LOW_STORAGE_THRESHOLD                  @"Low storage threshold"
-#define PURGE_DELETED_DATA                     @"Purge deleted data by"
+#define PURGE_DELETED_DATA                     @"Purge data by"
 #define CHANGE_YOUR_PASSWORD                   @"Change your pin"
 #define DELETE_MESSAGE                         @"Do you want to delete this recording?"
 #define TRANSFER_MESSAGE_MULTIPLES             @"Are you sure you want to transfer this recording(s)?"

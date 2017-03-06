@@ -175,6 +175,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         circleViewTimerMinutes=0;
         circleViewTimerSeconds=0;
         dictationTimerSeconds=0;
+        recordingPauseAndExit = YES;
         
         //---set and show recording file name when view will appear---//
     
@@ -1493,7 +1494,8 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
    
     //[startRecordingImageView setHidden:YES];
     
-    [self performSelector:@selector(startRecorderAfterPrepared) withObject:nil afterDelay:0.3];
+    [self startRecorderAfterPrepared];
+   // [self performSelector:@selector(startRecorderAfterPrepared) withObject:nil afterDelay:0.3];
 
 
 }
@@ -1716,6 +1718,8 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
                             sender.userInteractionEnabled=NO;
                             deleteButton.userInteractionEnabled=NO;
                             recordingNew=NO;
+                            
+                            
                             [self dismissViewControllerAnimated:YES completion:nil];
 
                             

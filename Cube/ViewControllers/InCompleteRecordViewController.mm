@@ -148,9 +148,11 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
         
         NSArray* audioMinutesAndSecondsArray= [self.audioDuration componentsSeparatedByString:@":"];
         
-        timerMinutes=[[audioMinutesAndSecondsArray objectAtIndex:0]intValue];
+        timerHour= [[audioMinutesAndSecondsArray objectAtIndex:0]intValue];
         
-        timerSeconds=[[audioMinutesAndSecondsArray objectAtIndex:1]intValue];
+        timerMinutes=[[audioMinutesAndSecondsArray objectAtIndex:1]intValue];
+        
+        timerSeconds=[[audioMinutesAndSecondsArray objectAtIndex:2]intValue];
         
         
         audioDurationLAbel.text=[NSString stringWithFormat:@"%02d:%02d:%02d",timerHour,timerMinutes,timerSeconds];

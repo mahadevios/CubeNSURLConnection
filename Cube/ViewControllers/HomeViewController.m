@@ -74,24 +74,27 @@
 //        }
 //    }];
     
+    
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"MM-dd-yyyy";
     NSString* todaysDate = [formatter stringFromDate:[NSDate date]];
     
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:PURGE_DATA_DATE]== NULL)
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:PURGE_DATA_DATE]== NULL)//for first time to check files to be purge are available or not
     {
        
         [self deleteDictation];
     }
     else
-    if (!([[[NSUserDefaults standardUserDefaults] valueForKey:PURGE_DATA_DATE] isEqualToString:todaysDate]))
+    if (!([[[NSUserDefaults standardUserDefaults] valueForKey:PURGE_DATA_DATE] isEqualToString:todaysDate]))// this wil be 2nd day after pressing later or pressing delete
     {
         [self deleteDictation];
        // [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:PURGE_DATA_DATE];
 
 
     }
-  //  [[NSUserDefaults standardUserDefaults] setValue:NULL forKey:PURGE_DATA_DATE];
+  //  [[Database shareddatabase] updateAudioFileName];
+
+ //   [[NSUserDefaults standardUserDefaults] setValue:NULL forKey:PURGE_DATA_DATE];
 
      [self.tabBarController.tabBar setHidden:NO];
 //    [[Database shareddatabase] setDepartment];//to insert default department for imported files
@@ -99,13 +102,19 @@
 - (void)deleteDictation
 {
     
+    NSString* purgeDeleteDataKey =  [[NSUserDefaults standardUserDefaults] valueForKey:PURGE_DELETED_DATA];
+
+    if (![purgeDeleteDataKey isEqualToString:@"Do not purge"])
+    {
+        
+  
     
    NSArray* filesToBePurgedArray = [[Database shareddatabase] getFilesToBePurged];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"MM-dd-yyyy";
     NSString* todaysDate = [formatter stringFromDate:[NSDate date]];
     
-    if (filesToBePurgedArray>0)
+    if (filesToBePurgedArray.count>0)
     {
         alertController = [UIAlertController alertControllerWithTitle:@"Purge old dictations?"
                                                               message:nil
@@ -114,6 +123,11 @@
                                                 style:UIAlertActionStyleDestructive
                                               handler:^(UIAlertAction * action)
                         {
+                            hud.minSize = CGSizeMake(150.f, 100.f);
+                            hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                            hud.mode = MBProgressHUDModeIndeterminate;
+                            hud.label.text = @"Purging..";
+                            hud.detailsLabel.text = @"Please wait";
                             for (int i=0; i< filesToBePurgedArray.count; i++)
                             {
                           
@@ -125,13 +139,17 @@
                             BOOL delete= [[APIManager sharedManager] deleteFile:fileName];
                             
                                 
-                            [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:PURGE_DATA_DATE];
-
-//                            if (delete)
-//                            {
-                                [self dismissViewControllerAnimated:YES completion:nil];
-                           // }
                             }
+                            
+                            [hud removeFromSuperview];
+                            
+                            [[NSUserDefaults standardUserDefaults] setValue:todaysDate forKey:PURGE_DATA_DATE];//to avoid multiple popuops on same day
+                            
+                            //                            if (delete)
+                            //                            {
+                            [self dismissViewControllerAnimated:YES completion:nil];
+                            // }
+
                         }]; //You can use a block here to handle a press on this button
         [alertController addAction:actionDelete];
         
@@ -153,9 +171,7 @@
         
         [self presentViewController:alertController animated:YES completion:nil];
     }
-    
-
-    
+    }
 }
 
 -(void)getCounts

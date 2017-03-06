@@ -74,7 +74,7 @@ extern OSStatus DoConvertFile(CFURLRef sourceURL, CFURLRef destinationURL, OSTyp
     }
     if (![[NSUserDefaults standardUserDefaults] boolForKey:PURGE_DELETED_DATA])
     {
-        [[NSUserDefaults standardUserDefaults] setValue:@"15 days" forKey:PURGE_DELETED_DATA];
+        [[NSUserDefaults standardUserDefaults] setValue:@"1 day" forKey:PURGE_DELETED_DATA];
     }
 
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLoadedFirstTime"];

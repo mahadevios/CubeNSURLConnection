@@ -100,10 +100,13 @@
     
     
     UILabel* recordingDurationLabel=[cell viewWithTag:102];
-    int audioMinutes= [[awaitingFileTransferDict valueForKey:@"CurrentDuration"] intValue]/60;
-    int audioSeconds= [[awaitingFileTransferDict valueForKey:@"CurrentDuration"] intValue]%60;
+    int audioHour= [[awaitingFileTransferDict valueForKey:@"CurrentDuration"] intValue]/(60*60);
+    int audioHourByMod= [[awaitingFileTransferDict valueForKey:@"CurrentDuration"] intValue]%(60*60);
+
+    int audioMinutes = audioHourByMod / 60;
+    int audioSeconds = audioHourByMod % 60;
     
-    recordingDurationLabel.text=[NSString stringWithFormat:@"%02d:%02d",audioMinutes,audioSeconds];
+    recordingDurationLabel.text=[NSString stringWithFormat:@"%02d:%02d:%02d",audioHour,audioMinutes,audioSeconds];
   //  NSLog(@"%@",recordingDurationLabel.text);
     
     UILabel* departmentNameLabel=[cell viewWithTag:103];

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
 @interface HomeViewController : UIViewController
 {
@@ -20,6 +21,7 @@
     UIAlertController *alertController;
     UIAlertAction *actionDelete;
     UIAlertAction *actionCancel;
+    MBProgressHUD* hud;
     
 }
 @property (weak, nonatomic) IBOutlet UIView *transferredView;

@@ -2030,14 +2030,22 @@ static Database *db;
     {
         daysString = [daysArray objectAtIndex:0];
     }
-   // NSDate *purgeDataDate = [[NSDate date] dateByAddingTimeInterval:[daysString intValue]*24*60*60];
+  //  NSDate *purgeDataDate = [[NSDate date] dateByAddingTimeInterval:-[daysString intValue]*24*60*60];
     
-    NSDate *purgeDataDate = [[NSDate date] dateByAddingTimeInterval:3*24*60*60];
+    NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
+    dayComponent.day = -[daysString intValue];
+    
+    NSCalendar *theCalendar = [NSCalendar currentCalendar];
+//    NSDate *nextDate = [theCalendar dateByAddingComponents:dayComponent toDate:[NSDate date] options:0];
+    NSDate *nextDate = [theCalendar dateByAddingComponents:dayComponent toDate:[NSDate date] options:0];
+
+    NSLog(@"nextDate: %@ ...", nextDate);
+   // NSDate *purgeDataDate = [[NSDate date] dateByAddingTimeInterval:-5*24*60*60];
 
     
-    formatter.dateFormat = @"MM-dd-yyyy HH:mm:ss";
+    formatter.dateFormat = @"MM-dd-yyyy";
     
-    NSString* newDate = [formatter stringFromDate:purgeDataDate];
+    NSString* newDate = [formatter stringFromDate:nextDate];
 
     NSString *query3=[NSString stringWithFormat:@"Select RecordItemName,TransferDate from CubeData Where TransferStatus = 1 and DeleteStatus = 0 and TransferDate < '%@'",newDate];
     
@@ -2089,6 +2097,59 @@ static Database *db;
     
     return filesToBePurgedArray;
 
+}
+
+-(void)updateAudioFileName
+{
+    
+    NSString *query3=[NSString stringWithFormat:@"Update CubeData set TransferDate='02-21-2017 17:25:20'"];
+    Database *db=[Database shareddatabase];
+    NSString *dbPath=[db getDatabasePath];
+    sqlite3_stmt *statement;
+    sqlite3* feedbackAndQueryTypesDB;
+    
+    
+    const char * queryi3=[query3 UTF8String];
+    if (sqlite3_open([dbPath UTF8String], &feedbackAndQueryTypesDB)==SQLITE_OK)
+    {
+        sqlite3_prepare_v2(feedbackAndQueryTypesDB, queryi3, -1, &statement, NULL);
+        if(sqlite3_step(statement)==SQLITE_DONE)
+        {
+            // NSLog(@"report data inserted");
+            //NSLog(@"%@",NSHomeDirectory());
+            sqlite3_reset(statement);
+        }
+        else
+        {
+            //NSLog(@"%s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+        }
+    }
+    
+    else
+    {
+        //NSLog(@"errormsg=%s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    }
+    
+    if (sqlite3_finalize(statement) == SQLITE_OK)
+    {
+        //NSLog(@"statement is finalized");
+    }
+    else
+        // NSLog(@"Can't finalize due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    {
+    }
+    
+    if (sqlite3_close(feedbackAndQueryTypesDB) == SQLITE_OK)
+    {
+        //NSLog(@"db is closed");
+    }
+    else
+    {
+        // NSLog(@"Db is not closed due to error = %s",sqlite3_errmsg(feedbackAndQueryTypesDB));
+    }
+    
+    
+    
 }
 
 

@@ -541,7 +541,7 @@ static APIManager *singleton = nil;
                 
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
             
-            [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"%@",connectionError.localizedDescription] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+            [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"File uploading failed, %@",connectionError.localizedDescription] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
             }
             NSLog(@"error = %@", connectionError);
 
@@ -605,7 +605,7 @@ static APIManager *singleton = nil;
             NSLog(@"%@",str);
 
             NSLog(@"%@",result);
-          [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading fail" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+          [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading failed" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
         }
         
     }];
