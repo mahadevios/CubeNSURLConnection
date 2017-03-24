@@ -68,6 +68,8 @@
 
 -(void)updateUploadingFileDictationStatus;
 
+-(void)updateUploadingStuckedStatus;
+
 -(int)getTransferStatus:(NSString*)filename;
 
 -(NSString*)getDefaultDepartMentId;
@@ -88,4 +90,7 @@
 
 -(void)updateAudioFileName;// delete this later
 
+-(void)deleteFileRecordFromDatabase:(NSString*)fileName;
+
+-(void) createFileNameidentifierRelationshipTable;
 @end

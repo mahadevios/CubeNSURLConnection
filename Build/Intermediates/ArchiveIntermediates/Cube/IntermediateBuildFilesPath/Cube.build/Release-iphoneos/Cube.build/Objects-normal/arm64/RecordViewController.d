@@ -1,6 +1,6 @@
 dependencies: \
-  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/RecordViewController.mm \
-  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/RecordViewController.h \
-  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/ViewControllers/PopUpCustomView.h \
-  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/AudioSessionManager/AudioSessionManager.h \
-  /Users/admin/Documents/CubeBackUp/cube-master\ 2__16-aug/Cube/Libraries/MBProgressHUD/MBProgressHUD.h
+  /Users/admin/Documents/CubeBackUp/cube-master(completeTested\ with\ NSURLConnection)/Cube/ViewControllers/RecordViewController.mm \
+  /Users/admin/Documents/CubeBackUp/cube-master(completeTested\ with\ NSURLConnection)/Cube/ViewControllers/RecordViewController.h \
+  /Users/admin/Documents/CubeBackUp/cube-master(completeTested\ with\ NSURLConnection)/Cube/ViewControllers/PopUpCustomView.h \
+  /Users/admin/Documents/CubeBackUp/cube-master(completeTested\ with\ NSURLConnection)/Cube/AudioSessionManager/AudioSessionManager.h \
+  /Users/admin/Documents/CubeBackUp/cube-master(completeTested\ with\ NSURLConnection)/Cube/Libraries/MBProgressHUD/MBProgressHUD.h

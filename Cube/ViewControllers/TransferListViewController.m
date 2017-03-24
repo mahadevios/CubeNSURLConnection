@@ -50,7 +50,7 @@
     app.failedTransferNamesArray=[[NSMutableArray alloc]init];
     
     
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
+  //  [UIApplication sharedApplication].idleTimerDisabled = NO;
 
     [self.tableView reloadData];
     
@@ -204,7 +204,7 @@
     }
     else
         deleteStatusLabel.text=@"";
-    if ([[awaitingFileTransferDict valueForKey:@"DictationStatus"] isEqualToString:@"RecordingFileUpload"] && ([[awaitingFileTransferDict valueForKey:@"TransferStatus"] isEqualToString:@"NotTransferred"] || [[awaitingFileTransferDict valueForKey:@"TransferStatus"] isEqualToString:@"Resend"]))
+    if ([[awaitingFileTransferDict valueForKey:@"DictationStatus"] isEqualToString:@"RecordingFileUpload"] && ([[awaitingFileTransferDict valueForKey:@"TransferStatus"] isEqualToString:@"NotTransferred"] || [[awaitingFileTransferDict valueForKey:@"TransferStatus"] isEqualToString:@"Resend"] || [[awaitingFileTransferDict valueForKey:@"TransferStatus"] isEqualToString:@"ResendFailed"]))
     {
         
         deleteStatusLabel.text=@"Uploading";

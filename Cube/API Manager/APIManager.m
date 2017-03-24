@@ -19,7 +19,7 @@
 
 
 @implementation APIManager
-@synthesize incompleteFileTransferCount,inCompleteFileTransferNamesArray,transferFailedCount,todaysFileTransferCount,awaitingFileTransferCount,awaitingFileTransferNamesArray,deletedListArray,transferredListArray;
+@synthesize incompleteFileTransferCount,inCompleteFileTransferNamesArray,transferFailedCount,todaysFileTransferCount,awaitingFileTransferCount,awaitingFileTransferNamesArray,deletedListArray,transferredListArray,responsesData;
 static APIManager *singleton = nil;
 
 // Shared method
@@ -145,7 +145,7 @@ static APIManager *singleton = nil;
 -(void) checkDeviceRegistrationMacID:(NSString*)macID
 {
     
-    
+    self.responsesData = [NSMutableDictionary new];
    
     if ([[AppPreferences sharedAppPreferences] isReachable])
     {
@@ -438,36 +438,222 @@ static APIManager *singleton = nil;
     
     
 }
+//- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
+//{
+//
+//    NSString* fileName = filnameString;
+//    
+//   
+//                NSError* error1;
+//                NSString* encryptedString = [NSJSONSerialization JSONObjectWithData:data
+//                                                                            options:NSJSONReadingAllowFragments
+//                                                                              error:&error1];
+//    
+//                dispatch_async(dispatch_get_main_queue(), ^
+//                               {
+//                                   NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:encryptedString options:0];
+//                                   NSData* data1=[decodedData AES256DecryptWithKey:SECRET_KEY];
+//                                   NSString* responseString=[[NSString alloc] initWithData:data1 encoding:NSUTF8StringEncoding];
+//                                   responseString=[responseString stringByReplacingOccurrencesOfString:@"True" withString:@"1"];
+//                                   responseString=[responseString stringByReplacingOccurrencesOfString:@"False" withString:@"0"];
+//    
+//                                   NSData *responsedData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+//    
+//                                   result = [NSJSONSerialization JSONObjectWithData:responsedData
+//                                                                            options:NSJSONReadingAllowFragments
+//                                                                              error:nil];
+//    
+//                                   NSString* returnCode= [result valueForKey:@"code"];
+//                                   
+//                                   if ([returnCode longLongValue]==200)
+//                                   {
+//                                       NSString* idvalString= [result valueForKey:@"mobiledictationidval"];
+//                                       NSString* date= [[APIManager sharedManager] getDateAndTimeString];
+//                                       Database* db=[Database shareddatabase];
+//                                       [db updateAudioFileUploadedStatus:@"Transferred" fileName:fileName dateAndTime:date mobiledictationidval:[idvalString longLongValue]];
+//                                       [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUploaded" fileName:fileName];
+//                                       
+//                                       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//                                       
+//                                       [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:nil];
+//                                       // NSLog(@"%@",[NSString stringWithFormat:@"%@ uploaded successfully",str]);
+//                                       
+//                                       [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"%@ uploaded successfully",fileName] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+//                                       
+//                                       
+//                                   }
+//                                   else
+//                                   {
+//                                       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//                                       
+//                                       [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:fileName dateAndTime:@"" mobiledictationidval:0];
+//                                       [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:nil];
+//                                       
+//                                       NSLog(@"%@",fileName);
+//                                       
+//                                       NSLog(@"%@",result);
+//                                       [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading failed" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+//                                   }
+//
+//                               });
+//
+//}
 
--(void)uploadFileToServer:(NSString*)str
+//- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+//    if (error) {
+//        NSLog(@"%@ failed: %@", task.originalRequest.URL, error);
+//    }
+//    
+//}
+
+//-(void)uploadFileToServerUsingNSURLSession:(NSString*)str
+//
+//{
+//    if ([[AppPreferences sharedAppPreferences] isReachable])
+//    {
+//        [UIApplication sharedApplication].idleTimerDisabled = YES;
+//
+//    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+//    
+//
+//    NSString* filePath = [NSHomeDirectory() stringByAppendingPathComponent:
+//                          [NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,str] ];
+//    
+//    NSURL* url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", BASE_URL_PATH, FILE_UPLOAD_API]];
+//    
+//    NSString *boundary = [self generateBoundaryString];
+//    
+//    NSDictionary *params = @{@"filename"     : str,
+//                             };
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+//        
+//    [request setHTTPMethod:@"POST"];
+//    
+//    long filesizelong=[[APIManager sharedManager] getFileSize:filePath];
+//        
+//    int filesizeint=(int)filesizelong;
+//    
+//   // NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
+//    //DepartMent *deptObj = [NSKeyedUnarchiver unarchiveObjectWithData:data];//    if ([[[NSUserDefaults standardUserDefaults]
+//    
+//       int departmentId= [[Database shareddatabase] getDepartMentIdForFileName:str];
+//        NSString* macId=[Keychain getStringForKey:@"udid"];
+//        int transferStatus=[[Database shareddatabase] getTransferStatus:str];
+//        if (transferStatus==0)
+//            transferStatus=1;
+//        else if(transferStatus==1)
+//        {
+//            transferStatus=5;
+//        }
+//        else if(transferStatus==3)
+//        {
+//            transferStatus=5;
+//        }
+//        else if(transferStatus==2)
+//        {
+//            transferStatus=1;
+//        }
+//            int mobileDictationIdVal=[[Database shareddatabase] getMobileDictationIdFromFileName:str];
+//
+//        
+//
+//   // NSString* authorisation=[NSString stringWithFormat:@"%@*%d*%ld*%d*%d",macId,filesizeint,deptObj.Id,1,0];
+//        NSString* authorisation=[NSString stringWithFormat:@"%@*%d*%d*%d*%d",macId,filesizeint,departmentId,transferStatus,mobileDictationIdVal];
+//        
+//
+//    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+//    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+//    
+//    //    NSError* error;
+//        
+//        
+//        NSData* jsonData=[authorisation dataUsingEncoding:NSUTF8StringEncoding];
+//        
+//        
+//        NSData *dataDesc = [jsonData AES256EncryptWithKey:SECRET_KEY];
+//        
+//        
+//        
+//        NSString* str2=[dataDesc base64EncodedStringWithOptions:0];
+//        
+//    [request setValue:str2 forHTTPHeaderField:@"Authorization"];
+//    
+//    // create body
+//    
+//    NSData *httpBody = [self createBodyWithBoundary:boundary parameters:params paths:@[filePath] fieldName:str];
+//    
+//    request.HTTPBody = httpBody;
+//    
+//        
+////***********************
+//            NSURLSessionConfiguration * backgroundConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"hello"];
+//       
+//        NSURLSession *session = [NSURLSession sessionWithConfiguration:backgroundConfig delegate:self delegateQueue:nil];
+//        
+//       // backgroundConfig setide
+//        
+////        self.responsesData = nil;
+////        self.responsesData = [NSMutableDictionary new];
+////        [self.responsesData setValue:str forKey:[NSString stringWithFormat:@"%lu",(unsigned long)[AppPreferences sharedAppPreferences].uploadTask.taskIdentifier]];
+////
+////        
+//        [request setHTTPMethod:@"POST"];
+//        
+//        [AppPreferences sharedAppPreferences].uploadTask = [session uploadTaskWithRequest:request fromFile:nil];
+//        
+//     //   [AppPreferences sharedAppPreferences].uploadTask.description = str;
+//        
+//       [ [AppPreferences sharedAppPreferences].uploadTask resume];
+//        
+//
+//    
+//    }
+//    else
+//    {
+//        [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"No internet connection!" withMessage:@"Please check your inernet connection and try again." withCancelText:nil withOkText:@"OK" withAlertTag:1000];
+//    }
+//    
+//    
+//}
+
+-(void)uploadFileToServer:str
+{
+  //  filnameString = str;
+    //[self uploadFileToServerUsingNSURLSession:str];
+    [self uploadFileToServerUsingNSURLConnection:str];
+
+}
+-(void)uploadFileToServerUsingNSURLConnection:(NSString*)str
 
 {
     if ([[AppPreferences sharedAppPreferences] isReachable])
     {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
-
-    NSString* filePath = [NSHomeDirectory() stringByAppendingPathComponent:
-                          [NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,str] ];
-    
-    NSURL* url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", BASE_URL_PATH, FILE_UPLOAD_API]];
-    
-    NSString *boundary = [self generateBoundaryString];
-    
-    NSDictionary *params = @{@"filename"     : str,
-                             };
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+        [UIApplication sharedApplication].idleTimerDisabled = YES;
         
-    [request setHTTPMethod:@"POST"];
-    
-    long filesizelong=[[APIManager sharedManager] getFileSize:filePath];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
-    int filesizeint=(int)filesizelong;
-    
-   // NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
-    //DepartMent *deptObj = [NSKeyedUnarchiver unarchiveObjectWithData:data];//    if ([[[NSUserDefaults standardUserDefaults]
-    
-       int departmentId= [[Database shareddatabase] getDepartMentIdForFileName:str];
+        
+        NSString* filePath = [NSHomeDirectory() stringByAppendingPathComponent:
+                              [NSString stringWithFormat:@"Documents/%@/%@.wav",AUDIO_FILES_FOLDER_NAME,str] ];
+        
+        NSURL* url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", BASE_URL_PATH, FILE_UPLOAD_API]];
+        
+        NSString *boundary = [self generateBoundaryString];
+        
+        NSDictionary *params = @{@"filename"     : str,
+                                 };
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+        
+        [request setHTTPMethod:@"POST"];
+        
+        long filesizelong=[[APIManager sharedManager] getFileSize:filePath];
+        
+        int filesizeint=(int)filesizelong;
+        
+        // NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:SELECTED_DEPARTMENT_NAME];
+        //DepartMent *deptObj = [NSKeyedUnarchiver unarchiveObjectWithData:data];//    if ([[[NSUserDefaults standardUserDefaults]
+        
+        int departmentId= [[Database shareddatabase] getDepartMentIdForFileName:str];
         NSString* macId=[Keychain getStringForKey:@"udid"];
         int transferStatus=[[Database shareddatabase] getTransferStatus:str];
         if (transferStatus==0)
@@ -484,18 +670,18 @@ static APIManager *singleton = nil;
         {
             transferStatus=1;
         }
-            int mobileDictationIdVal=[[Database shareddatabase] getMobileDictationIdFromFileName:str];
-
+        int mobileDictationIdVal=[[Database shareddatabase] getMobileDictationIdFromFileName:str];
         
-
-   // NSString* authorisation=[NSString stringWithFormat:@"%@*%d*%ld*%d*%d",macId,filesizeint,deptObj.Id,1,0];
+        
+        
+        // NSString* authorisation=[NSString stringWithFormat:@"%@*%d*%ld*%d*%d",macId,filesizeint,deptObj.Id,1,0];
         NSString* authorisation=[NSString stringWithFormat:@"%@*%d*%d*%d*%d",macId,filesizeint,departmentId,transferStatus,mobileDictationIdVal];
         
-
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
-    
-        NSError* error;
+        
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+        
+        //    NSError* error;
         
         
         NSData* jsonData=[authorisation dataUsingEncoding:NSUTF8StringEncoding];
@@ -507,110 +693,116 @@ static APIManager *singleton = nil;
         
         NSString* str2=[dataDesc base64EncodedStringWithOptions:0];
         
-    [request setValue:str2 forHTTPHeaderField:@"Authorization"];
-    
-    // create body
-    
-    NSData *httpBody = [self createBodyWithBoundary:boundary parameters:params paths:@[filePath] fieldName:str];
-    
-    request.HTTPBody = httpBody;
-    
-    
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-        if (connectionError)
-        {
-           
+        [request setValue:str2 forHTTPHeaderField:@"Authorization"];
+        
+        // create body
+        
+        NSData *httpBody = [self createBodyWithBoundary:boundary parameters:params paths:@[filePath] fieldName:str];
+        
+        request.HTTPBody = httpBody;
+        
+        
 
-//            [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:@"" mobiledictationidval:0];
-            //-1001 for request time out and -1005 network connection lost
-            if (connectionError.code==-1001 || connectionError.code==-1005)
-            {
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        
+        
+            [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                if (connectionError)
+                {
+        
+        
+        //            [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:@"" mobiledictationidval:0];
+                    //-1001 for request time out and -1005 network connection lost
+                    if (connectionError.code==-1001 || connectionError.code==-1005)
+                    {
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+                             [UIApplication sharedApplication].idleTimerDisabled = YES;
+                            [self uploadFileToServer:str];
+                        });
+                    }
+                    else
+                    {
+                       // [UIApplication sharedApplication].idleTimerDisabled = NO;
+        
+                        NSString* date= [[APIManager sharedManager] getDateAndTimeString];
+        
+                        [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:date mobiledictationidval:0];
+        
+                        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
+        
+                    [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"File uploading failed, %@",connectionError.localizedDescription] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+                    }
+                    NSLog(@"error = %@", connectionError);
+        
+                    return;
+                }
+        
+                NSError* error;
+                NSString* encryptedString = [NSJSONSerialization JSONObjectWithData:data
+                                                         options:NSJSONReadingAllowFragments
+                                                           error:&error];
+                //NSString* returnCode= [result valueForKey:@"code"];
+        
+                //    NSDictionary *response1 = [NSJSONSerialization JSONObjectWithData:responseData
+                //                                                                 options:NSUTF8StringEncoding
+                //                                                                   error:&error];
+        
+        //
+        //        NSString *encryptedResponse = [NSJSONSerialization JSONObjectWithData:encryptedString
+        //                                                                      options:NSUTF8StringEncoding
+        //                                                                        error:&error];
+        
+        
+                NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:encryptedString options:0];
+                NSData* data1=[decodedData AES256DecryptWithKey:SECRET_KEY];
+                NSString* responseString=[[NSString alloc] initWithData:data1 encoding:NSUTF8StringEncoding];
+                responseString=[responseString stringByReplacingOccurrencesOfString:@"True" withString:@"1"];
+                responseString=[responseString stringByReplacingOccurrencesOfString:@"False" withString:@"0"];
+        
+                NSData *responsedData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+        
+                result = [NSJSONSerialization JSONObjectWithData:responsedData
+                                                           options:NSJSONReadingAllowFragments
+                                                             error:&error];
+        
+                NSString* returnCode= [result valueForKey:@"code"];
+        
+                if ([returnCode longLongValue]==200)
+                {
+                    NSString* idvalString= [result valueForKey:@"mobiledictationidval"];
+                    NSString* date= [[APIManager sharedManager] getDateAndTimeString];
+                    Database* db=[Database shareddatabase];
+                    [db updateAudioFileUploadedStatus:@"Transferred" fileName:str dateAndTime:date mobiledictationidval:[idvalString longLongValue]];
+                    [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUploaded" fileName:str];
+        
+                    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
+                   // NSLog(@"%@",[NSString stringWithFormat:@"%@ uploaded successfully",str]);
+        
+                    [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"%@ uploaded successfully",str] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+                  
                     
-                    [self uploadFileToServer:str];
-                });
-            }
-            else
-            {
+                }
+                else
+                {
+                    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        
+                     [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:@"" mobiledictationidval:0];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
+        
+                    NSLog(@"%@",str);
+        
+                    NSLog(@"%@",result);
+                  [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading failed" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+                }
                 
-                NSString* date= [[APIManager sharedManager] getDateAndTimeString];
-                
-                [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:date mobiledictationidval:0];
-                
-                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-                
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
-            
-            [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"File uploading failed, %@",connectionError.localizedDescription] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
-            }
-            NSLog(@"error = %@", connectionError);
-
-            return;
-        }
-        
-        NSError* error;
-        NSString* encryptedString = [NSJSONSerialization JSONObjectWithData:data
-                                                 options:NSJSONReadingAllowFragments
-                                                   error:&error];
-        //NSString* returnCode= [result valueForKey:@"code"];
-        
-        //    NSDictionary *response1 = [NSJSONSerialization JSONObjectWithData:responseData
-        //                                                                 options:NSUTF8StringEncoding
-        //                                                                   error:&error];
-        
-//        
-//        NSString *encryptedResponse = [NSJSONSerialization JSONObjectWithData:encryptedString
-//                                                                      options:NSUTF8StringEncoding
-//                                                                        error:&error];
+            }];
         
         
-        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:encryptedString options:0];
-        NSData* data1=[decodedData AES256DecryptWithKey:SECRET_KEY];
-        NSString* responseString=[[NSString alloc] initWithData:data1 encoding:NSUTF8StringEncoding];
-        responseString=[responseString stringByReplacingOccurrencesOfString:@"True" withString:@"1"];
-        responseString=[responseString stringByReplacingOccurrencesOfString:@"False" withString:@"0"];
-        
-        NSData *responsedData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-        
-        result = [NSJSONSerialization JSONObjectWithData:responsedData
-                                                   options:NSJSONReadingAllowFragments
-                                                     error:&error];
-        
-        NSString* returnCode= [result valueForKey:@"code"];
-
-        if ([returnCode longLongValue]==200)
-        {
-            NSString* idvalString= [result valueForKey:@"mobiledictationidval"];
-            NSString* date= [[APIManager sharedManager] getDateAndTimeString];
-            Database* db=[Database shareddatabase];
-            [db updateAudioFileUploadedStatus:@"Transferred" fileName:str dateAndTime:date mobiledictationidval:[idvalString longLongValue]];
-            [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUploaded" fileName:str];
-
-            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
-           // NSLog(@"%@",[NSString stringWithFormat:@"%@ uploaded successfully",str]);
-
-            [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"%@ uploaded successfully",str] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
-          
-            
-        }
-        else
-        {
-            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
-             [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:@"" mobiledictationidval:0];
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
-
-            NSLog(@"%@",str);
-
-            NSLog(@"%@",result);
-          [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading failed" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
-        }
-        
-    }];
-    
-    
     }
     else
     {
@@ -619,7 +811,6 @@ static APIManager *singleton = nil;
     
     
 }
-
 
 
 - (NSData *)createBodyWithBoundary:(NSString *)boundary
@@ -686,6 +877,122 @@ static APIManager *singleton = nil;
     
 }
 
+//***********************
+//        NSURLSessionConfiguration * backgroundConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"task1"];
+//        NSURLSession *session = [NSURLSession sharedSession];
+//        //
+//        //
+//        [request setHTTPMethod:@"POST"];
+//
+//        [AppPreferences sharedAppPreferences].uploadTask = [session uploadTaskWithRequest:request fromData:nil];
+//
+//        [ [AppPreferences sharedAppPreferences].uploadTask resume];
+
+//        [AppPreferences sharedAppPreferences].uploadTask = [session         uploadTaskWithRequest:request fromData:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+//        {
+//            //Perform operations on your response here
+//
+//            if (error)
+//            {
+//
+//
+//
+//                if (error.code==-1001 || error.code==-1005)
+//                {
+//                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//
+//                        [UIApplication sharedApplication].idleTimerDisabled = YES;
+//                        //[self uploadFileToServer:str];
+//                        [[AppPreferences sharedAppPreferences].uploadTask resume];
+//
+//                       //// [[AppPreferences sharedAppPreferences].uploadTask resume];
+//                    });
+//                }
+//                else
+//                {
+//                    // [UIApplication sharedApplication].idleTimerDisabled = NO;
+//                    dispatch_async(dispatch_get_main_queue(), ^
+//                                   {
+//                                       //NSLog(@"Reachable");
+//                                       NSString* date= [[APIManager sharedManager] getDateAndTimeString];
+//
+//                                       [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:date mobiledictationidval:0];
+//
+//                                       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//
+//                                       [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
+//
+//                                       [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"File uploading failed, %@",error.localizedDescription] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+//                                   });
+//
+//
+//                }
+//                NSLog(@"error = %@", error);
+//
+//                return;
+//            }
+//
+//            NSError* error1;
+//            NSString* encryptedString = [NSJSONSerialization JSONObjectWithData:data
+//                                                                        options:NSJSONReadingAllowFragments
+//                                                                          error:&error1];
+//
+//            dispatch_async(dispatch_get_main_queue(), ^
+//                           {
+//                               NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:encryptedString options:0];
+//                               NSData* data1=[decodedData AES256DecryptWithKey:SECRET_KEY];
+//                               NSString* responseString=[[NSString alloc] initWithData:data1 encoding:NSUTF8StringEncoding];
+//                               responseString=[responseString stringByReplacingOccurrencesOfString:@"True" withString:@"1"];
+//                               responseString=[responseString stringByReplacingOccurrencesOfString:@"False" withString:@"0"];
+//
+//                               NSData *responsedData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+//
+//                               result = [NSJSONSerialization JSONObjectWithData:responsedData
+//                                                                        options:NSJSONReadingAllowFragments
+//                                                                          error:nil];
+//
+//                               NSString* returnCode= [result valueForKey:@"code"];
+//
+//                               if ([returnCode longLongValue]==200)
+//                               {
+//                                   NSString* idvalString= [result valueForKey:@"mobiledictationidval"];
+//                                   NSString* date= [[APIManager sharedManager] getDateAndTimeString];
+//                                   Database* db=[Database shareddatabase];
+//                                   [db updateAudioFileUploadedStatus:@"Transferred" fileName:str dateAndTime:date mobiledictationidval:[idvalString longLongValue]];
+//                                   [[Database shareddatabase] updateAudioFileStatus:@"RecordingFileUploaded" fileName:str];
+//
+//                                   [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//
+//                                   [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
+//                                   // NSLog(@"%@",[NSString stringWithFormat:@"%@ uploaded successfully",str]);
+//
+//                                   [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:[NSString stringWithFormat:@"%@ uploaded successfully",str] withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+//
+//
+//                               }
+//                               else
+//                               {
+//                                   [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//
+//                                   [[Database shareddatabase] updateAudioFileUploadedStatus:@"TransferFailed" fileName:str dateAndTime:@"" mobiledictationidval:0];
+//                                   [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_FILE_UPLOAD_API object:response];
+//
+//                                   NSLog(@"%@",str);
+//
+//                                   NSLog(@"%@",result);
+//                                   [[AppPreferences sharedAppPreferences] showAlertViewWithTitle:@"Alert" withMessage:@"File uploading failed" withCancelText:nil withOkText:@"Ok" withAlertTag:1000];
+//                               }
+//
+//                           });
+//
+//
+//
+//        }];
+//
+//        //Don't forget this line ever
+//     [[AppPreferences sharedAppPreferences].uploadTask resume];
+//
+//*********************
 
 
 

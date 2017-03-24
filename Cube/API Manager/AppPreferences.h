@@ -33,7 +33,7 @@
 @property (nonatomic,assign)    BOOL                        fileUploading;
 @property (nonatomic,strong) NSMutableArray*                importedFilesAudioDetailsArray;
 @property (nonatomic, strong) User *userObj;
-
+@property(nonatomic,strong)NSURLSessionUploadTask *uploadTask;
 +(AppPreferences *) sharedAppPreferences;
 
 -(void) showAlertViewWithTitle:(NSString *) title withMessage:(NSString *) message withCancelText:(NSString *) cancelText withOkText:(NSString *) okText withAlertTag:(int) tag;

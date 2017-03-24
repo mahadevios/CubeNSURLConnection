@@ -22,6 +22,7 @@
     NSString* audioFilePath;
     Float64  sampleRate;
     AVAudioPlayer* player;
+   
 
 }
 @property (strong, nonatomic) UIWindow *window;
